@@ -1,5 +1,6 @@
 package com.openclassroom.paymybuddy;
 
+import com.openclassroom.paymybuddy.model.BankAccount;
 import com.openclassroom.paymybuddy.model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -19,6 +20,7 @@ public class CreateUser {
                 SessionFactory factory = new Configuration()
                 .configure("hibernate.cfg.xml")
                 .addAnnotatedClass(User.class)
+                .addAnnotatedClass(BankAccount.class)
                 .buildSessionFactory();
 
 
@@ -29,7 +31,7 @@ public class CreateUser {
 
             // create a user
             System.out.println("Creating a new User object");
-            User tempUser = new User("André", "Berthelot", "2mail@gmail.com", "password", balancedefault, dateSQL);
+            User tempUser = new User("Nicolas", "Sarkozy", "nonpresident@gmail.com", "password", balancedefault, dateSQL);
             // start transaction
             session.beginTransaction();
             // save the user
@@ -40,6 +42,8 @@ public class CreateUser {
             session.getTransaction().commit();
 
         } finally {
+
+            session.close();
             System.out.println("Closing the Session");
             factory.close();
         }

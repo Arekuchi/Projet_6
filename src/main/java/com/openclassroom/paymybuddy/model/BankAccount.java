@@ -1,14 +1,15 @@
 package com.openclassroom.paymybuddy.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import com.openclassroom.paymybuddy.model.User;
 
 @Entity
 @Table(name="bank_account")
 public class BankAccount {
+
+
+    // fields
 
     @Id
     @Column(name="iban")
@@ -20,20 +21,26 @@ public class BankAccount {
     private String bankName;
     @Column(name="account_name")
     private String accountName;
-    @Column(name="user_id")
-    private int userId;
+
+    @ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name="user_id")
+    private User user;
+
+    // constructors
 
     public BankAccount() {
 
     }
 
-    public BankAccount(String iban, String bic, String bankName, String accountName, int userId) {
+    public BankAccount(String iban, String bic, String bankName, String accountName) {
         this.iban = iban;
         this.bic = bic;
         this.bankName = bankName;
         this.accountName = accountName;
-        this.userId = userId;
     }
+
+
+    // getters & setters
 
     public String getIban() {
         User tempUser = new User();
@@ -73,14 +80,21 @@ public class BankAccount {
         this.accountName = accountName;
     }
 
-    public int getUserId() {
-        User tempUser = new User();
-        int userId = tempUser.getId();
-
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @Override
+    public String toString() {
+        return "BankAccount{" +
+                "iban='" + iban + '\'' +
+                ", bic='" + bic + '\'' +
+                ", bankName='" + bankName + '\'' +
+                ", accountName='" + accountName + '\'' +
+                '}';
     }
 }

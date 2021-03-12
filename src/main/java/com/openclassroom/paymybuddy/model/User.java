@@ -1,14 +1,15 @@
 package com.openclassroom.paymybuddy.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="user")
 public class User {
+
+    // fields
 
     @Id
     @Column(name="id")
@@ -27,6 +28,10 @@ public class User {
     @Column(name="createdate")
     Timestamp createDate;
 
+    @OneToMany(mappedBy="user", cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    private List<BankAccount> bankAccountList;
+
+    // constructors
 
     public User() {
 
@@ -41,6 +46,8 @@ public class User {
         this.createDate = createDate;
 
     }
+
+    // getters & setters
 
     public int getId() {
         return id;
@@ -98,6 +105,14 @@ public class User {
         this.createDate = createDate;
     }
 
+    public List<BankAccount> getBankAccountList() {
+        return bankAccountList;
+    }
+
+    public void setBankAccountList(List<BankAccount> bankAccountList){
+        this.bankAccountList = bankAccountList;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -107,5 +122,16 @@ public class User {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 '}';
+    }
+
+    // convenience method for bi-directional relationship
+
+    public void add(BankAccount tempBankAccount) {
+
+        if (bankAccountList == null) {
+            bankAccountList = new ArrayList<>();
+        }
+        bankAccountList.add(tempBankAccount);
+        tempBankAccount.setUser(this);
     }
 }
