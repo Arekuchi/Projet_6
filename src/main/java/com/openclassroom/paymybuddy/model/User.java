@@ -1,17 +1,22 @@
 package com.openclassroom.paymybuddy.model;
 
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 @Entity
-@Table(name="user")
+@Table(name="user", uniqueConstraints = {@UniqueConstraint(columnNames="email", name = "uniqueEmailConstraint")})
 public class User {
+
 
     // fields
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
     private int id;
 
@@ -19,7 +24,7 @@ public class User {
     private String firstName;
     @Column(name="lastname")
     private String lastName;
-    @Column(name="email")
+    @Column(name="email", unique = true)
     private String email;
     @Column(name="password")
     private String password;
@@ -30,6 +35,11 @@ public class User {
 
     @OneToMany(mappedBy="user", cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private List<BankAccount> bankAccountList;
+
+    @OneToMany(mappedBy="user", cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    private List<Relation> relationList;
+
+
 
     // constructors
 
@@ -44,8 +54,18 @@ public class User {
         this.password = password;
         this.balance = balance;
         this.createDate = createDate;
-
     }
+
+    public User(int id, String firstName, String lastName, String email, String password, double balance, Timestamp createDate) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.balance = balance;
+        this.createDate = createDate;
+    }
+
 
     // getters & setters
 
@@ -134,4 +154,6 @@ public class User {
         bankAccountList.add(tempBankAccount);
         tempBankAccount.setUser(this);
     }
+
+
 }

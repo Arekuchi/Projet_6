@@ -12,7 +12,7 @@ public class BankAccount {
     // fields
 
     @Id
-    @Column(name="iban")
+    @Column(name="iban", length = 34)
     private String iban;
 
     @Column(name="bic")
@@ -39,23 +39,27 @@ public class BankAccount {
         this.accountName = accountName;
     }
 
+    public BankAccount(String iban, String bic, String bankName, String accountName, User user) {
+        this.iban = iban;
+        this.bic = bic;
+        this.bankName = bankName;
+        this.accountName = accountName;
+        this.user = user;
+    }
 
     // getters & setters
 
     public String getIban() {
-        User tempUser = new User();
-        String iban = "iban_" + tempUser.getLastName();
 
         return iban;
     }
 
     public void setIban(String iban) {
+
         this.iban = iban;
     }
 
     public String getBic() {
-        User tempUser = new User();
-        String bic = "bic_" + tempUser.getLastName();
 
         return bic;
     }
@@ -87,6 +91,11 @@ public class BankAccount {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public Integer getUserId() {
+        return user.getId();
+    }
+
 
     @Override
     public String toString() {

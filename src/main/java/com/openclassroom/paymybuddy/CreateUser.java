@@ -15,7 +15,7 @@ public class CreateUser {
 
         long now = System.currentTimeMillis();
         java.sql.Timestamp dateSQL = new Timestamp(now);
-
+        
 
                 SessionFactory factory = new Configuration()
                 .configure("hibernate.cfg.xml")
