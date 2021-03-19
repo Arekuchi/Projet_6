@@ -3,27 +3,22 @@ package com.openclassroom.paymybuddy.model;
 import javax.persistence.*;
 
 @Entity
+@PrimaryKeyJoinColumn(name = "transfer_id") // On va chercher la PK de l'entité mère
 @Table(name="external_transfer")
-public class ExternalTransfer {
+public class ExternalTransfer extends Transfer {
 
 
     // fields
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="transfer_id")
     private int id;
 
-    @Column(name="bank_account_iban", length = 34)
-    private String iban;
+
     @Column(name="fees")
     private double fees;
 
     @ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name="transfer_id")
-    private Transfer transfer;
-
-    @ManyToOne
     @JoinColumn(name="bank_account_iban")
     private BankAccount bankAccount ;
 
@@ -33,18 +28,15 @@ public class ExternalTransfer {
     public ExternalTransfer() {
     }
 
-    public ExternalTransfer(int id, String iban, double fees) {
-        this.id = id;
-        this.iban = iban;
+    public ExternalTransfer(double fees) {
+
         this.fees = fees;
     }
 
-    public ExternalTransfer(int id, String iban, double fees, Transfer transfer, BankAccount bankAccount) {
+    public ExternalTransfer(int id, double fees) {
         this.id = id;
-        this.iban = iban;
+
         this.fees = fees;
-        this.transfer = transfer;
-        this.bankAccount = bankAccount;
     }
 
     // getters & setters
@@ -57,13 +49,7 @@ public class ExternalTransfer {
         this.id = id;
     }
 
-    public String getIban() {
-        return iban;
-    }
 
-    public void setIban(String iban) {
-        this.iban = iban;
-    }
 
     public double getFees() {
         return fees;
@@ -73,16 +59,13 @@ public class ExternalTransfer {
         this.fees = fees;
     }
 
-    public Transfer getTransfer() {
-        return transfer;
-    }
-
-    public void setTransfer(Transfer transfer) {
-        this.transfer = transfer;
-    }
 
     public BankAccount getBankAccount() {
         return bankAccount;
+    }
+
+    public String getBankAccountIban() {
+        return bankAccount.getIban();
     }
 
     public void setBankAccount(BankAccount bankAccount) {
@@ -93,7 +76,6 @@ public class ExternalTransfer {
     public String toString() {
         return "ExternalTransfer{" +
                 "id=" + id +
-                ", iban='" + iban + '\'' +
                 ", fees=" + fees +
                 '}';
     }

@@ -2,9 +2,9 @@ package com.openclassroom.paymybuddy.model;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.List;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED) // La PK est partagée dans deux sous-entitées (Internal et External)
 @Table(name="transfer")
 public class Transfer {
 
@@ -14,7 +14,7 @@ public class Transfer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
-    private int id;
+    private Integer id;
 
     @Column(name="amount")
     private double amount;
@@ -26,16 +26,19 @@ public class Transfer {
     private String status;
 
 
-    @OneToMany(mappedBy="transfer", cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    private List<ExternalTransfer> externalTransferList;
-
-    @OneToMany(mappedBy="transfer", cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    private List<InternalTransfer> internalTransferList;
-
 
     // constructors
 
     public Transfer() {
+    }
+
+    public Transfer(double amount, String description, Timestamp transactionDate, String status) {
+
+        this.amount = amount;
+        this.description = description;
+        this.transactionDate = transactionDate;
+        this.status = status;
+
     }
 
     public Transfer(int id, double amount, String description, Timestamp transactionDate, String status) {
@@ -44,16 +47,7 @@ public class Transfer {
         this.description = description;
         this.transactionDate = transactionDate;
         this.status = status;
-    }
 
-    public Transfer(int id, double amount, String description, Timestamp transactionDate, String status, List<ExternalTransfer> externalTransferList, List<InternalTransfer> internalTransferList) {
-        this.id = id;
-        this.amount = amount;
-        this.description = description;
-        this.transactionDate = transactionDate;
-        this.status = status;
-        this.externalTransferList = externalTransferList;
-        this.internalTransferList = internalTransferList;
     }
 
     // getters & setters
@@ -98,21 +92,7 @@ public class Transfer {
         this.status = status;
     }
 
-    public List<ExternalTransfer> getExternalTransferList() {
-        return externalTransferList;
-    }
 
-    public void setExternalTransferList(List<ExternalTransfer> externalTransferList) {
-        this.externalTransferList = externalTransferList;
-    }
-
-    public List<InternalTransfer> getInternalTransferList() {
-        return internalTransferList;
-    }
-
-    public void setInternalTransferList(List<InternalTransfer> internalTransferList) {
-        this.internalTransferList = internalTransferList;
-    }
 
     @Override
     public String toString() {
@@ -123,4 +103,5 @@ public class Transfer {
                 ", transactionDate=" + transactionDate +
                 '}';
     }
+
 }

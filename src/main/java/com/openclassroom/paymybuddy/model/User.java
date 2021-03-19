@@ -33,12 +33,11 @@ public class User {
     @Column(name="createdate")
     Timestamp createDate;
 
-    @OneToMany(mappedBy="user", cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="user", cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private List<BankAccount> bankAccountList;
 
-    @OneToMany(mappedBy="user", cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(fetch = FetchType.EAGER, mappedBy="owner", cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private List<Relation> relationList;
-
 
 
     // constructors
@@ -131,6 +130,14 @@ public class User {
 
     public void setBankAccountList(List<BankAccount> bankAccountList){
         this.bankAccountList = bankAccountList;
+    }
+
+    public List<Relation> getRelationList() {
+        return relationList;
+    }
+
+    public void setRelationList(List<Relation> relationList) {
+        this.relationList = relationList;
     }
 
     @Override

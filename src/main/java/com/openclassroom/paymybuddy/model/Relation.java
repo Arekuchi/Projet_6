@@ -6,43 +6,32 @@ import javax.persistence.*;
 @Table(name="relation")
 public class Relation {
 
+
     // fields
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
-    private int id;
-
-    @Column(name="owner")
-    private int owner;
-    @Column(name="buddy")
-    private int buddy;
+    private Integer id;
 
     @ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name="user_id")
-    private User user;
+    @JoinColumn(name="owner")
+    private User owner;
+
+    @ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name="buddy")
+    private User buddy;
 
     // constructors
-
 
     public Relation() {
     }
 
-    public Relation(int id, int owner, int buddy) {
+    public Relation(Integer id) {
         this.id = id;
-        this.owner = owner;
-        this.buddy = buddy;
     }
 
-    public Relation(int id, int owner, int buddy, User user) {
-        this.id = id;
-        this.owner = owner;
-        this.buddy = buddy;
-        this.user = user;
-    }
-
-    // getters & setters
-
+// getters & setters
 
     public int getId() {
         return id;
@@ -52,28 +41,20 @@ public class Relation {
         this.id = id;
     }
 
-    public int getOwner() {
+    public User getOwner() {
         return owner;
     }
 
-    public void setOwner(int owner) {
+    public void setOwner(User owner) {
         this.owner = owner;
     }
 
-    public int getBuddy() {
+    public User getBuddy() {
         return buddy;
     }
 
-    public void setBuddy(int buddy) {
+    public void setBuddy(User buddy) {
         this.buddy = buddy;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     @Override

@@ -1,8 +1,8 @@
 package com.openclassroom.paymybuddy.model;
 
 import javax.persistence.*;
+import java.util.List;
 
-import com.openclassroom.paymybuddy.model.User;
 
 @Entity
 @Table(name="bank_account")
@@ -26,10 +26,18 @@ public class BankAccount {
     @JoinColumn(name="user_id")
     private User user;
 
+
+
     // constructors
 
     public BankAccount() {
 
+    }
+
+    public BankAccount(String bic, String bankName, String accountName) {
+        this.bic = bic;
+        this.bankName = bankName;
+        this.accountName = accountName;
     }
 
     public BankAccount(String iban, String bic, String bankName, String accountName) {
@@ -37,14 +45,6 @@ public class BankAccount {
         this.bic = bic;
         this.bankName = bankName;
         this.accountName = accountName;
-    }
-
-    public BankAccount(String iban, String bic, String bankName, String accountName, User user) {
-        this.iban = iban;
-        this.bic = bic;
-        this.bankName = bankName;
-        this.accountName = accountName;
-        this.user = user;
     }
 
     // getters & setters
@@ -95,6 +95,7 @@ public class BankAccount {
     public Integer getUserId() {
         return user.getId();
     }
+
 
 
     @Override
