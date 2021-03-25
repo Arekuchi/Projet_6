@@ -21,9 +21,9 @@ public class PaymybuddyApplication {
 		IUserDAO userDAO = context.getBean(IUserDAO.class);
 		System.out.println("Liste des Users : " + userDAO.findAll());
 
-//		// test liaison User + BankAccount
-//		List<User> userList = userDAO.findAll();
-//		System.out.println("Iban numéro 1 " + userList.get(0).getBankAccountList().get(0).getIban());
+		// test liaison User + BankAccount
+		List<User> userList = userDAO.findAll();
+		System.out.println("Iban numéro 1 " + userList.get(0).getBankAccountList().get(0).getIban());
 
 		// test BankAccount
 		IBankAccountDAO bankAccountDAO = context.getBean(IBankAccountDAO.class);
@@ -35,9 +35,9 @@ public class PaymybuddyApplication {
 
 		// test InternalTransfer
 		IInternalTransferDAO internalTransferDAO = context.getBean(IInternalTransferDAO.class);
-		System.out.println("Desceription du premier InternalTransfer = " + internalTransferDAO.findAll().get(0).getDescription());
+		System.out.println("Description du premier InternalTransfer = " + internalTransferDAO.findAll().get(0).getDescription());
 
-		// test Relation
-		System.out.println("Relation des utilsateurs = " + userDAO.findAll().get(0).getRelationList().get(0));
+//		// test Relation
+//		System.out.println("Relation des utilsateurs = " + userDAO.findAll().get(0).getRelationList().get(0));
 	}
 }

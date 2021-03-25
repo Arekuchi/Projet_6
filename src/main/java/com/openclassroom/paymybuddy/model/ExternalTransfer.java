@@ -11,12 +11,12 @@ public class ExternalTransfer extends Transfer {
     // fields
 
     @Id
-    @Column(name="transfer_id")
+    @JoinColumn(name="transfer_id")
     private int id;
-
 
     @Column(name="fees")
     private double fees;
+
 
     @ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name="bank_account_iban")
@@ -41,7 +41,7 @@ public class ExternalTransfer extends Transfer {
 
     // getters & setters
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 

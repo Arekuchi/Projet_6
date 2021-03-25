@@ -31,17 +31,18 @@ public class CreateInternalTransfer {
             int theId3 = 3;
             User tempUser = session.get(User.class, theId);
             User tempUser2 = session.get(User.class, theId2);
+
             Transfer tempTransfer = session.get(Transfer.class, theId3);
 
             // create a InternalTransfer
             System.out.println("Creating a new Internal Transfer object");
-//            InternalTransfer tempInternalTransfer = new InternalTransfer(3, tempUser.getId(), tempUser2.getId(), tempTransfer, tempUser.getId(), tempUser2.getId());
+            InternalTransfer tempInternalTransfer = new InternalTransfer(tempTransfer.getId(), tempUser, tempUser2);
 
             // start transaction
             session.beginTransaction();
             // save the user
 
-//            session.save(tempInternalTransfer);
+            session.save(tempInternalTransfer);
             // commit the transaction
             System.out.println("Done");
             session.getTransaction().commit();

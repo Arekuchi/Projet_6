@@ -26,6 +26,8 @@ public class BankAccount {
     @JoinColumn(name="user_id")
     private User user;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bankAccount", cascade = CascadeType.ALL)
+    private List<ExternalTransfer> externalTransferList;
 
 
     // constructors
@@ -96,7 +98,13 @@ public class BankAccount {
         return user.getId();
     }
 
+    public List<ExternalTransfer> getExternalTransferList() {
+        return externalTransferList;
+    }
 
+    public void setExternalTransferList(List<ExternalTransfer> externalTransferList) {
+        this.externalTransferList = externalTransferList;
+    }
 
     @Override
     public String toString() {

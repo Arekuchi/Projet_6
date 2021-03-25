@@ -1,19 +1,30 @@
 package com.openclassroom.paymybuddy.web.controller;
 
 import com.openclassroom.paymybuddy.model.BankAccount;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class BankAccountController {
 
+    // POST - CREATE
     @PostMapping("/AddAccount/{userId}")
-    public ResponseEntity<BankAccount> addBankAccount(@RequestBody BankAccount bankAccount, @PathVariable Integer userId) throws Exception {
+    public void addBankAccount(@RequestBody BankAccount bankAccount, @PathVariable Integer userId) throws Exception {
 
         // appel au service addBankAccount du service /BankAccountServiceImpl/
-    } 
+    }
 
+    // GET - READ
+    @GetMapping("/BankAccount")
+    public void getBankAccounts(@RequestBody BankAccount bankAccount) throws Exception {
+
+    }
+
+    @GetMapping("/BankAccount/{userId}")
+    public void getBankAccountByUserId(@RequestBody BankAccount bankAccount, @PathVariable Integer userId) throws Exception {
+
+    }
+
+    // UPDATE
+
+    // DELETE
 }

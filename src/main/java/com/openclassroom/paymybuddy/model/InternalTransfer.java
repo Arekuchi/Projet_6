@@ -41,7 +41,7 @@ public class InternalTransfer extends Transfer {
     // getters & setters
 
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
