@@ -1,6 +1,7 @@
 package com.openclassroom.paymybuddy.model;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "transfer_id") // On va chercher la PK de l'entité mère
@@ -9,10 +10,6 @@ public class ExternalTransfer extends Transfer {
 
 
     // fields
-
-    @Id
-    @JoinColumn(name="transfer_id")
-    private int id;
 
     @Column(name="fees")
     private double fees;
@@ -28,27 +25,11 @@ public class ExternalTransfer extends Transfer {
     public ExternalTransfer() {
     }
 
-    public ExternalTransfer(double fees) {
-
-        this.fees = fees;
+    public ExternalTransfer(double amount, String description, Timestamp transactionDate, String status) {
+        super(amount, description, transactionDate, status);
     }
 
-    public ExternalTransfer(int id, double fees) {
-        this.id = id;
-
-        this.fees = fees;
-    }
-
-    // getters & setters
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
+// getters & setters
 
 
     public double getFees() {
@@ -59,13 +40,8 @@ public class ExternalTransfer extends Transfer {
         this.fees = fees;
     }
 
-
     public BankAccount getBankAccount() {
         return bankAccount;
-    }
-
-    public String getBankAccountIban() {
-        return bankAccount.getIban();
     }
 
     public void setBankAccount(BankAccount bankAccount) {
@@ -75,7 +51,6 @@ public class ExternalTransfer extends Transfer {
     @Override
     public String toString() {
         return "ExternalTransfer{" +
-                "id=" + id +
                 ", fees=" + fees +
                 '}';
     }

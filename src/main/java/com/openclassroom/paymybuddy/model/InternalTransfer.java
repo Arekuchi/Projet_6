@@ -10,10 +10,6 @@ public class InternalTransfer extends Transfer {
 
     // fields
 
-    @Id
-    @JoinColumn(name="transfer_id")
-    private int id;
-
     @ManyToOne
     @JoinColumn(name="user_id_sender")
     private User senderID;
@@ -32,22 +28,7 @@ public class InternalTransfer extends Transfer {
         this.receiverID = receiverID;
     }
 
-    public InternalTransfer(int id, User senderID, User receiverID) {
-        this.id = id;
-        this.senderID = senderID;
-        this.receiverID = receiverID;
-    }
-
     // getters & setters
-
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public User getSenderID() {
         return senderID;
@@ -68,7 +49,6 @@ public class InternalTransfer extends Transfer {
     @Override
     public String toString() {
         return "InternalTransfer{" +
-                "id=" + id +
                 ", senderID=" + senderID +
                 ", receiverID=" + receiverID +
                 '}';

@@ -19,8 +19,8 @@ public class BankAccountController {
 
     }
 
-    @GetMapping("/BankAccount/{userId}")
-    public void getBankAccountByUserId(@RequestBody BankAccount bankAccount, @PathVariable Integer userId) throws Exception {
+    @GetMapping("/BankAccount/{email}")
+    public void getBankAccountByUserId(@RequestBody BankAccount bankAccount, @PathVariable String email) throws Exception {
 
     }
 

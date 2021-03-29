@@ -36,13 +36,13 @@ public class CreateInternalTransfer {
 
             // create a InternalTransfer
             System.out.println("Creating a new Internal Transfer object");
-            InternalTransfer tempInternalTransfer = new InternalTransfer(tempTransfer.getId(), tempUser, tempUser2);
+//            InternalTransfer tempInternalTransfer = new InternalTransfer(tempTransfer.getId(), tempUser, tempUser2);
 
             // start transaction
             session.beginTransaction();
             // save the user
 
-            session.save(tempInternalTransfer);
+//            session.save(tempInternalTransfer);
             // commit the transaction
             System.out.println("Done");
             session.getTransaction().commit();

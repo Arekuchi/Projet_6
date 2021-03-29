@@ -33,14 +33,14 @@ public class CreateExternalTransfer {
             //
             BankAccount tempBankAccount = new BankAccount("iban_Sarkozy", "bic_Sarkozy", "Banque Postale", "compte épargne");
             Transfer tempTransfer = new Transfer(500.00, "virement initial", dateSQL, "IN PROGRESS");
-            ExternalTransfer tempExternalTransfer = new ExternalTransfer(tempTransfer.getAmount() / 10);
-            tempExternalTransfer.setStatus("IN PROGRESS");
-            tempExternalTransfer.setTransactionDate(dateSQL);
-            tempExternalTransfer.setBankAccount(tempBankAccount);
-
-
-            // save the Transfer
-            session.save(tempExternalTransfer);
+////            ExternalTransfer tempExternalTransfer = new ExternalTransfer(tempTransfer.getAmount() / 10);
+//            tempExternalTransfer.setStatus("IN PROGRESS");
+//            tempExternalTransfer.setTransactionDate(dateSQL);
+////            tempExternalTransfer.setBankAccount(tempBankAccount);
+//
+//
+//            // save the Transfer
+//            session.save(tempExternalTransfer);
 
 
             // commit the transaction

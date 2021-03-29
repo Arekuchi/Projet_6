@@ -1,5 +1,8 @@
 package com.openclassroom.paymybuddy.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -25,9 +28,6 @@ public class BankAccount {
     @ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name="user_id")
     private User user;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bankAccount", cascade = CascadeType.ALL)
-    private List<ExternalTransfer> externalTransferList;
 
 
     // constructors
@@ -98,13 +98,6 @@ public class BankAccount {
         return user.getId();
     }
 
-    public List<ExternalTransfer> getExternalTransferList() {
-        return externalTransferList;
-    }
-
-    public void setExternalTransferList(List<ExternalTransfer> externalTransferList) {
-        this.externalTransferList = externalTransferList;
-    }
 
     @Override
     public String toString() {
