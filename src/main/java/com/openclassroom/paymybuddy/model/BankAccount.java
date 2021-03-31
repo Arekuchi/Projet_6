@@ -27,6 +27,7 @@ public class BankAccount {
 
     @ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name="user_id")
+    @JsonIgnore
     private User user;
 
 

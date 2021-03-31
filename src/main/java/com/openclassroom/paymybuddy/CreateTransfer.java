@@ -5,6 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 public class CreateTransfer {
@@ -29,7 +30,7 @@ public class CreateTransfer {
             // create a Transfer
 
             System.out.println("Creating a new Transfer object");
-            Transfer tempTransfer = new Transfer(5, 500.00, "virement initial", dateSQL, "IN PROGRESS");
+            Transfer tempTransfer = new Transfer(5, new BigDecimal("500.00"), "virement initial", dateSQL, "IN PROGRESS");
 
 
 

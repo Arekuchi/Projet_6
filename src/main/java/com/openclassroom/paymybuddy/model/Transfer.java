@@ -1,6 +1,8 @@
 package com.openclassroom.paymybuddy.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Entity
@@ -17,12 +19,16 @@ public class Transfer {
     private Integer id;
 
     @Column(name="amount")
-    private double amount;
+    @NotNull
+    private BigDecimal amount;
     @Column(name="description")
+
     private String description;
     @Column(name="transaction_date")
+    @NotNull
     private Timestamp transactionDate;
     @Column(name="status")
+    @NotNull
     private String status;
 
 
@@ -32,22 +38,19 @@ public class Transfer {
     public Transfer() {
     }
 
-    public Transfer(double amount, String description, Timestamp transactionDate, String status) {
-
+    public Transfer(@NotNull BigDecimal amount, String description, @NotNull Timestamp transactionDate, @NotNull String status) {
         this.amount = amount;
         this.description = description;
         this.transactionDate = transactionDate;
         this.status = status;
-
     }
 
-    public Transfer(int id, double amount, String description, Timestamp transactionDate, String status) {
+    public Transfer(Integer id, @NotNull BigDecimal amount,String description, @NotNull Timestamp transactionDate, @NotNull String status) {
         this.id = id;
         this.amount = amount;
         this.description = description;
         this.transactionDate = transactionDate;
         this.status = status;
-
     }
 
     // getters & setters
@@ -61,11 +64,11 @@ public class Transfer {
         this.id = id;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

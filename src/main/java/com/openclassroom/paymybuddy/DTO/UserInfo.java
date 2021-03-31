@@ -1,7 +1,11 @@
 package com.openclassroom.paymybuddy.DTO;
 
+import com.openclassroom.paymybuddy.model.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 public class UserInfo {
     private Integer id;
@@ -28,6 +32,8 @@ public class UserInfo {
         this.lastName = lastName;
         this.email = email;
     }
+
+
 
     // getter & setter
 
@@ -62,4 +68,14 @@ public class UserInfo {
     public void setEmail(String email) {
         this.email = email;
     }
+
+
+
+//    public UserInfo findByEmail(String email) extends JpaRepository<User, String> {
+//        UserInfo tempUser = new UserInfo();
+//        tempUser.findByEmail(email);
+//
+//
+//
+//    }
 }

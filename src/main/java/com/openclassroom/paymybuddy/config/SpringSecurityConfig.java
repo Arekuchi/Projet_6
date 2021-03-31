@@ -17,6 +17,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.authorizeRequests().antMatchers("/actuator/**").permitAll();
         httpSecurity.authorizeRequests().antMatchers("/h2-console/**/**").permitAll();
         httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/*").permitAll();
+        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/**/**").permitAll();
         httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/*").permitAll().anyRequest().authenticated().and().httpBasic();
     }
 

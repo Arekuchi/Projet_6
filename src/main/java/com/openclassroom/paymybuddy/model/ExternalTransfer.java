@@ -1,6 +1,7 @@
 package com.openclassroom.paymybuddy.model;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Entity
@@ -25,7 +26,7 @@ public class ExternalTransfer extends Transfer {
     public ExternalTransfer() {
     }
 
-    public ExternalTransfer(double amount, String description, Timestamp transactionDate, String status) {
+    public ExternalTransfer(BigDecimal amount, String description, Timestamp transactionDate, String status) {
         super(amount, description, transactionDate, status);
     }
 
@@ -40,13 +41,8 @@ public class ExternalTransfer extends Transfer {
         this.fees = fees;
     }
 
-    public BankAccount getBankAccount() {
-        return bankAccount;
-    }
 
-    public void setBankAccount(BankAccount bankAccount) {
-        this.bankAccount = bankAccount;
-    }
+
 
     @Override
     public String toString() {
