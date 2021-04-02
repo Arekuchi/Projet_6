@@ -12,9 +12,7 @@ import java.util.List;
 @Table(name="user", uniqueConstraints = {@UniqueConstraint(columnNames="email", name = "uniqueEmailConstraint")})
 public class User {
 
-
     // fields
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
@@ -36,12 +34,8 @@ public class User {
     @OneToMany(fetch = FetchType.EAGER, mappedBy="user", cascade=CascadeType.ALL)
     private List<BankAccount> bankAccountList;
 
-//    @OneToMany(fetch = FetchType.EAGER, mappedBy="owner", cascade=CascadeType.ALL)
-//    private List<Relation> relationList;
-
 
     // constructors
-
     public User() {
 
     }
@@ -67,7 +61,6 @@ public class User {
 
 
     // getters & setters
-
     public int getId() {
         return id;
     }
@@ -132,13 +125,8 @@ public class User {
         this.bankAccountList = bankAccountList;
     }
 
-//    public List<Relation> getRelationList() {
-//        return relationList;
-//    }
-//
-//    public void setRelationList(List<Relation> relationList) {
-//        this.relationList = relationList;
-//    }
+
+    // convenience method
 
     @Override
     public String toString() {

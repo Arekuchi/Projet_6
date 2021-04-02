@@ -56,16 +56,12 @@ public class UserController {
     @GetMapping("/Users/{email}")
     @ResponseStatus(HttpStatus.OK)
     public UserInfo getUserByEmail(@PathVariable String email)  {
-
         return userService.findByEmail(email);
-
-
     }
 
     @GetMapping("/UsersCount")
     @ResponseStatus(HttpStatus.OK)
     public Integer getUserCount() throws Exception {
-
         return userService.countUsers();
     }
 

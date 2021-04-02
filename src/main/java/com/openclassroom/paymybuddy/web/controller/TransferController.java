@@ -32,4 +32,20 @@ public class TransferController {
     public List<TransferInfo> getTransfers() {
         return transferService.findAll();
     }
+
+    @GetMapping("/Transfer/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public TransferInfo getTransferById(@PathVariable Integer id) {
+
+        return transferService.findById(id);
+    }
+
+    @GetMapping("/Transfers/{status}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<TransferInfo> getTransfersByStatus(@PathVariable String status) {
+
+        return transferService.findByStatus(status);
+    }
+
+
 }

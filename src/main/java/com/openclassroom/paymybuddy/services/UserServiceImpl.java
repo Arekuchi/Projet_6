@@ -7,6 +7,8 @@ import com.openclassroom.paymybuddy.DTO.UserInfoCreate;
 import com.openclassroom.paymybuddy.model.User;
 
 
+import com.openclassroom.paymybuddy.web.exception.DataAlreadyExistsException;
+import com.openclassroom.paymybuddy.web.exception.DataMissingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -66,9 +68,22 @@ public class UserServiceImpl implements IUserService {
     public Boolean addUser(UserInfoCreate userInfoCreate) {
 
         // etape 1 : Vérifier que toutes les entrées de l'objet en param est valide (InvalidArgument, DataMissing) / if etc...
-
-        // etape 2 : DataAlreadyException, son mail ne doit pas exister dans la DB  / existsByEmail / if userDAO.existByEmail(userInfoCreate.getEmail)
-
+        if (userInfoCreate.getEmail().isEmpty()) {
+            throw new DataMissingException("L'email ne peut pas être vide");
+        }
+        if (userInfoCreate.getFirstName().isEmpty()) {
+            throw new DataMissingException("Le prénom ne peut pas être vide");
+        }
+        if (userInfoCreate.getLastName().isEmpty()) {
+            throw new DataMissingException("Le nom de famille ne peut pas être vide");
+        }
+        if (userInfoCreate.getPassword().isEmpty()) {
+            throw new DataMissingException("Le mot de passe ne peut pas être vide");
+        }
+//         etape 2 : DataAlreadyException, son mail ne doit pas exister dans la DB  / existsByEmail / if userDAO.existByEmail(userInfoCreate.getEmail)
+        if (userDAO.findByEmail(userInfoCreate.getEmail())) {
+            throw new DataAlreadyExistsException("L'email existe déjà dans la base de donnée");
+        }
         // etape 3 : utiliser le .save de la JPA (sur User uniquement), donc mapper userInfoCreate dans User : pour faire userDAO.save(User)
 
 

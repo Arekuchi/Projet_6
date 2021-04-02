@@ -1,11 +1,6 @@
 package com.openclassroom.paymybuddy.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import javax.persistence.*;
-import java.util.List;
-
 
 @Entity
 @Table(name="bank_account")
@@ -27,7 +22,6 @@ public class BankAccount {
 
     @ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name="user_id")
-    @JsonIgnore
     private User user;
 
 
@@ -49,6 +43,7 @@ public class BankAccount {
         this.bankName = bankName;
         this.accountName = accountName;
     }
+
 
     // getters & setters
 
@@ -99,7 +94,9 @@ public class BankAccount {
         return user.getId();
     }
 
+    public String userEmail() {return user.getEmail();}
 
+    // convinience
     @Override
     public String toString() {
         return "BankAccount{" +
