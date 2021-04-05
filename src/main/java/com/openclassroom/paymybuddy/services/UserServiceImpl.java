@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,10 +83,22 @@ public class UserServiceImpl implements IUserService {
             throw new DataMissingException("Le mot de passe ne peut pas être vide");
         }
 //         etape 2 : DataAlreadyException, son mail ne doit pas exister dans la DB  / existsByEmail / if userDAO.existByEmail(userInfoCreate.getEmail)
-        if (userDAO.findByEmail(userInfoCreate.getEmail())) {
+        if (userDAO.existsByEmail(userInfoCreate.getEmail())) {
             throw new DataAlreadyExistsException("L'email existe déjà dans la base de donnée");
         }
         // etape 3 : utiliser le .save de la JPA (sur User uniquement), donc mapper userInfoCreate dans User : pour faire userDAO.save(User)
+
+        User user = new User();
+        user.setEmail(userInfoCreate.getEmail());
+        user.setFirstName(userInfoCreate.getFirstName());
+        user.setLastName(userInfoCreate.getLastName());
+        user.setPassword(userInfoCreate.getPassword());
+
+        user.setBalance(0.00);
+        user.setCreateDate(Timestamp.valueOf(LocalDateTime.now()));
+
+        userDAO.save(user);
+
 
 
         return true; // rajout pour éviter une erreur
