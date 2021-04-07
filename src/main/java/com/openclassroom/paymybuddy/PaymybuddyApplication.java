@@ -2,7 +2,9 @@ package com.openclassroom.paymybuddy;
 
 
 import com.openclassroom.paymybuddy.DAO.*;
+import com.openclassroom.paymybuddy.DTO.UserInfoCreate;
 import com.openclassroom.paymybuddy.model.User;
+import com.openclassroom.paymybuddy.services.IUserService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -39,5 +41,17 @@ public class PaymybuddyApplication {
 
 //		// test Relation
 //		System.out.println("Relation des utilsateurs = " + userDAO.findAll().get(0).getRelationList().get(0));
+
+
+		// test addUSer - fonctionne ok
+//		IUserService userService = context.getBean(IUserService.class);
+//		UserInfoCreate userInfoCreate = new UserInfoCreate();
+//		userInfoCreate.setFirstName("");
+//		userInfoCreate.setLastName("Bertrand");
+//		userInfoCreate.setEmail("banatole@mail.com");
+//		userInfoCreate.setPassword("1234");
+//
+//
+//		System.out.println("Ajout d'un utilisateur" + userService.addUser(userInfoCreate));
 	}
 }

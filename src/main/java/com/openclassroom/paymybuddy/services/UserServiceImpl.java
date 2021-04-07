@@ -84,7 +84,7 @@ public class UserServiceImpl implements IUserService {
         }
 //         etape 2 : DataAlreadyException, son mail ne doit pas exister dans la DB  / existsByEmail / if userDAO.existByEmail(userInfoCreate.getEmail)
         if (userDAO.existsByEmail(userInfoCreate.getEmail())) {
-            throw new DataAlreadyExistsException("L'email existe déjà dans la base de donnée");
+            throw new DataAlreadyExistsException("L'email est déjà présent dans la base de donnée");
         }
         // etape 3 : utiliser le .save de la JPA (sur User uniquement), donc mapper userInfoCreate dans User : pour faire userDAO.save(User)
 
