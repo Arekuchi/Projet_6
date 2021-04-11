@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 
@@ -39,6 +39,8 @@ public class UserController {
         userService.addUser(userInfoCreate);
         logger.info("AddUser for " + userInfoCreate.toString() + "IS OK ! ");
 
+
+
         return new ResponseEntity(userInfoCreate, HttpStatus.CREATED);
 
     }
@@ -56,6 +58,8 @@ public class UserController {
     @GetMapping("/Users/{email}")
     @ResponseStatus(HttpStatus.OK)
     public UserInfo getUserByEmail(@PathVariable String email)  {
+
+
         return userService.findByEmail(email);
     }
 
@@ -67,15 +71,37 @@ public class UserController {
 
     // UPDATE
     @PutMapping("/Users/{userId}")
-    public void updateUserById(@RequestBody User user, @PathVariable Integer userId) throws Exception {
+    public UserInfoCreate updateUserByEmail(@RequestBody UserInfoCreate user, @PathVariable String email) throws Exception {
 
+        userService.findByEmail(email);
+        userService.deleteUserByEmail(email);
 
+        UserInfoCreate userInfoCreate = updateUserByEmail(user, email);
+        userInfoCreate.setFirstName(user.getFirstName());
+        userInfoCreate.setLastName(user.getLastName());
+        userInfoCreate.setEmail(user.getEmail());
+        userInfoCreate.setPassword(user.getPassword());
+
+        userService.addUser(user);
+
+        return user;
     }
 
     // DELETE
 
-    @DeleteMapping("/Users/{userId}")
-    public void deleteUserById(@RequestBody User user, @PathVariable Integer userId) throws Exception {
+    @DeleteMapping("/Users/{email}")
+    public String deleteUserById(@PathVariable String email) throws Exception {
+
+        UserInfo tempUser = userService.findByEmail(email);
+
+        // exception if null
+        if (tempUser == null) {
+            throw new RuntimeException("L'email de l'utilisateur n'a pas été trouvé - " + email);
+        }
+
+        userService.deleteUserByEmail(email);
+
+        return "L'utilisateur à été supprimé - ";
 
     }
 

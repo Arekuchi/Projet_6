@@ -14,11 +14,11 @@ public class Relation {
     @Column(name="id")
     private Integer id;
 
-    @ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne
     @JoinColumn(name="owner")
     private User owner;
 
-    @ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne
     @JoinColumn(name="buddy")
     private User buddy;
 
@@ -33,11 +33,11 @@ public class Relation {
 
 // getters & setters
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

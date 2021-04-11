@@ -65,4 +65,8 @@ public class TransferServiceImpl implements ITransferService {
         return transferInfoList;
     }
 
+    // Méthode addInternalTransaction
+
+    // Méthode addExternalTransaction
+
 }

@@ -18,6 +18,8 @@ class UserControllerTest {
     UserServiceImpl userService;
 
     @Test
-    void getUsers() {
+    void getUsers() throws Exception {
+
+
     }
 }

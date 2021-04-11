@@ -5,6 +5,7 @@ import com.openclassroom.paymybuddy.DAO.*;
 import com.openclassroom.paymybuddy.DTO.UserInfoCreate;
 import com.openclassroom.paymybuddy.model.User;
 import com.openclassroom.paymybuddy.services.IUserService;
+import com.openclassroom.paymybuddy.web.controller.UserController;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -50,8 +51,20 @@ public class PaymybuddyApplication {
 //		userInfoCreate.setLastName("Bertrand");
 //		userInfoCreate.setEmail("banatole@mail.com");
 //		userInfoCreate.setPassword("1234");
-//
+
 //
 //		System.out.println("Ajout d'un utilisateur" + userService.addUser(userInfoCreate));
+
+		// test deleteUser - fonctionne ok, erreur si email is null
+		IUserService userService = context.getBean(IUserService.class);
+//
+//		userDAO.delete(userDAO.findByEmail("banatole@mail.com"));
+
+
+		User owner = userDAO.findByEmail("mail@gmail.com");
+		User buddy = userDAO.findByEmail("nonpresident@gmail.com");
+		userService.addRelation(owner, buddy);
+
+
 	}
 }

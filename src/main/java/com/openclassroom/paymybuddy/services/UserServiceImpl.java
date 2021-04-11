@@ -1,14 +1,17 @@
 package com.openclassroom.paymybuddy.services;
 
 
+import com.openclassroom.paymybuddy.DAO.IRelationDAO;
 import com.openclassroom.paymybuddy.DAO.IUserDAO;
 import com.openclassroom.paymybuddy.DTO.UserInfo;
 import com.openclassroom.paymybuddy.DTO.UserInfoCreate;
+import com.openclassroom.paymybuddy.model.Relation;
 import com.openclassroom.paymybuddy.model.User;
 
 
 import com.openclassroom.paymybuddy.web.exception.DataAlreadyExistsException;
 import com.openclassroom.paymybuddy.web.exception.DataMissingException;
+import com.openclassroom.paymybuddy.web.exception.InvalidArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +33,8 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     IUserDAO userDAO;
 
+    @Autowired
+    IRelationDAO relationDAO;
 
     @Override
     public List<UserInfo> findAll() {
@@ -58,6 +63,8 @@ public class UserServiceImpl implements IUserService {
 
         return userInfo;
     }
+
+
 
     @Override
     public int countUsers() {
@@ -103,4 +110,37 @@ public class UserServiceImpl implements IUserService {
 
         return true; // rajout pour éviter une erreur
     }
+
+    @Override
+    public Boolean addRelation(User owner, User buddy) {
+
+        Relation relation = new Relation();
+        relation.setOwner(owner);
+        relation.setBuddy(buddy);
+
+        relationDAO.save(relation);
+
+        return true;
+    }
+
+
+
+
+    public boolean deleteUserByEmail(String email) throws Exception {
+
+        // on vérifie que le param est bien rempli
+        if (email.isEmpty() || email.isBlank()) {
+            throw new DataMissingException("L'email de l'utilisateur ne peut être vide");
+        }
+        // on vérifie que l'email existe dans la DB
+        if (!userDAO.existsByEmail(email)) {
+            throw new InvalidArgumentException("L'email de l'utilisateur n'existe pas");
+        }
+
+        userDAO.delete(userDAO.findByEmail(email));
+
+        return true;
+    }
+
+
 }

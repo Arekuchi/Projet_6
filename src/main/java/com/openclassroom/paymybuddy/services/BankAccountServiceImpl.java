@@ -6,6 +6,8 @@ import com.openclassroom.paymybuddy.DTO.BankAccountInfo;
 import com.openclassroom.paymybuddy.DTO.UserInfo;
 import com.openclassroom.paymybuddy.model.BankAccount;
 import com.openclassroom.paymybuddy.model.User;
+import com.openclassroom.paymybuddy.web.exception.DataMissingException;
+import com.openclassroom.paymybuddy.web.exception.InvalidArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -82,5 +84,22 @@ public class BankAccountServiceImpl implements IBankAccountService {
             bankAccountInfoList.add(bankAccountInfo);
         }
         return bankAccountInfoList;
+    }
+
+
+    public boolean deleteBankAccountByUserEmail(String email) {
+
+        // on vérifie que le param est bien rempli
+        if (email.isEmpty() || email.isBlank()) {
+            throw new DataMissingException("L'email de l'utilisateur ne peut être vide");
+        }
+        // on vérifie que l'email existe dans la DB
+        if (!userDAO.existsByEmail(email)) {
+            throw new InvalidArgumentException("L'email de l'utilisateur n'existe pas");
+        }
+
+        bankAccountDAO.delete(bankAccountDAO.findByUserEmail(email));
+
+        return true;
     }
 }

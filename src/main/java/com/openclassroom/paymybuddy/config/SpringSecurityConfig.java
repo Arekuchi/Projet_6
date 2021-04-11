@@ -13,12 +13,17 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
 
+        httpSecurity.csrf().disable();
         httpSecurity.authorizeRequests().antMatchers("/actuator*").permitAll();
         httpSecurity.authorizeRequests().antMatchers("/actuator/**").permitAll();
         httpSecurity.authorizeRequests().antMatchers("/h2-console/**/**").permitAll();
         httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/*").permitAll();
         httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/**/**").permitAll();
-        httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/**/**").permitAll().anyRequest().authenticated().and().httpBasic();
+        httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/**/**").permitAll();
+
+        httpSecurity.authorizeRequests().antMatchers(HttpMethod.DELETE, "/**/**").permitAll().anyRequest().authenticated().and().httpBasic();
+
+
 
 
     }
