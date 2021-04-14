@@ -1,6 +1,7 @@
 package com.openclassroom.paymybuddy.services;
 
 import com.openclassroom.paymybuddy.DAO.IUserDAO;
+import com.openclassroom.paymybuddy.DTO.ExternalTransferDTO;
 import com.openclassroom.paymybuddy.DTO.InternalTransferInfo;
 import com.openclassroom.paymybuddy.DTO.TransferInfo;
 import com.openclassroom.paymybuddy.DTO.UserInfo;
@@ -80,12 +81,11 @@ public class PayMyBuddyServices implements IPayMyBuddyServices {
             throw new DataNotFoundException("L'utilisateur n'existe pas : " + userReceiver.getFirstName() + userReceiver.getLastName());
         }
 
-        ExternalTransfer tempExternalTransfer = new ExternalTransfer();
+        ExternalTransferDTO tempExternalTransfer = new ExternalTransferDTO();
         tempExternalTransfer.setAmount(amount);
-        tempExternalTransfer.setTransactionDate(Timestamp.valueOf(LocalDateTime.now()));
-        tempExternalTransfer.set(externalTransfer.getDescription());
-        tempExternalTransfer.setFees(amount.doubleValue() / 10);
-        transferService.addExternalTransaction
+        tempExternalTransfer.setUser(receiver);
+        tempExternalTransfer.setIban(iban);
+        transferService.addExternalTransaction(tempExternalTransfer);
     }
 
     /**
