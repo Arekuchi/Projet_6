@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -101,7 +102,7 @@ public class UserServiceImpl implements IUserService {
         user.setLastName(userInfoCreate.getLastName());
         user.setPassword(userInfoCreate.getPassword());
 
-        user.setBalance(0.00);
+        user.setBalance(new BigDecimal(0.00));
         user.setCreateDate(Timestamp.valueOf(LocalDateTime.now()));
 
         userDAO.save(user);

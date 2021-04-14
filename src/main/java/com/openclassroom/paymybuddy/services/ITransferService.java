@@ -1,5 +1,6 @@
 package com.openclassroom.paymybuddy.services;
 
+import com.openclassroom.paymybuddy.DTO.InternalTransferInfo;
 import com.openclassroom.paymybuddy.DTO.TransferInfo;
 
 
@@ -9,4 +10,5 @@ public interface ITransferService {
 
     List<TransferInfo> findAll();
     TransferInfo findById(Integer id);
+    Boolean addInternalTransaction(InternalTransferInfo transferInfo);
 }

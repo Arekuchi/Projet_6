@@ -1,7 +1,12 @@
 package com.openclassroom.paymybuddy.services;
 
+import com.openclassroom.paymybuddy.DAO.IInternalTransferDAO;
 import com.openclassroom.paymybuddy.DAO.ITransferDAO;
+import com.openclassroom.paymybuddy.DAO.IUserDAO;
+import com.openclassroom.paymybuddy.DTO.InternalTransferInfo;
 import com.openclassroom.paymybuddy.DTO.TransferInfo;
+import com.openclassroom.paymybuddy.model.ExternalTransfer;
+import com.openclassroom.paymybuddy.model.InternalTransfer;
 import com.openclassroom.paymybuddy.model.Transfer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +22,12 @@ public class TransferServiceImpl implements ITransferService {
 
     @Autowired
     ITransferDAO transferDAO;
+
+    @Autowired
+    IInternalTransferDAO internalTransferDAO;
+
+    @Autowired
+    IUserDAO userDAO;
 
     @Override
     public List<TransferInfo> findAll() {
@@ -67,6 +78,27 @@ public class TransferServiceImpl implements ITransferService {
 
     // Méthode addInternalTransaction
 
+    public Boolean addInternalTransaction(InternalTransferInfo internalTransferInfo) {
+
+        InternalTransfer internalTransfer = new InternalTransfer();
+        internalTransfer.setReceiverID(userDAO.getOne(internalTransferInfo.getSenderId()));
+        internalTransfer.setReceiverID(userDAO.getOne(internalTransferInfo.getReceiverId()));
+
+        transferDAO.save(internalTransfer);
+        return true;
+    }
     // Méthode addExternalTransaction
 
+    public Boolean addExternalTransaction(ExternalTransfer externalTransfer) {
+
+        ExternalTransfer tempExternalTransfer = new ExternalTransfer();
+        tempExternalTransfer.setAmount(externalTransfer.getAmount());
+        tempExternalTransfer.setTransactionDate(externalTransfer.getTransactionDate());
+        tempExternalTransfer.setDescription(externalTransfer.getDescription());
+        tempExternalTransfer.setFees(externalTransfer.getFees());
+
+
+        transferDAO.save(tempExternalTransfer);
+        return true;
+    }
 }

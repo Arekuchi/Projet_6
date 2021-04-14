@@ -2,6 +2,7 @@ package com.openclassroom.paymybuddy.model;
 
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ public class User {
     @Column(name="password")
     private String password;
     @Column(name="balance")
-    double balance;
+    BigDecimal balance;
     @Column(name="createdate")
     Timestamp createDate;
 
@@ -40,7 +41,7 @@ public class User {
 
     }
 
-    public User(String firstName, String lastName, String email, String password, double balance, Timestamp createDate) {
+    public User(String firstName, String lastName, String email, String password, BigDecimal balance, Timestamp createDate) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -49,7 +50,7 @@ public class User {
         this.createDate = createDate;
     }
 
-    public User(int id, String firstName, String lastName, String email, String password, double balance, Timestamp createDate) {
+    public User(int id, String firstName, String lastName, String email, String password, BigDecimal balance, Timestamp createDate) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -102,11 +103,11 @@ public class User {
         this.password = password;
     }
 
-    public double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 
