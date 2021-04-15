@@ -4,12 +4,13 @@ package com.openclassroom.paymybuddy;
 import com.openclassroom.paymybuddy.DAO.*;
 import com.openclassroom.paymybuddy.DTO.UserInfoCreate;
 import com.openclassroom.paymybuddy.model.User;
-import com.openclassroom.paymybuddy.services.IUserService;
+import com.openclassroom.paymybuddy.services.*;
 import com.openclassroom.paymybuddy.web.controller.UserController;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -61,9 +62,14 @@ public class PaymybuddyApplication {
 //		userDAO.delete(userDAO.findByEmail("banatole@mail.com"));
 
 
-		User owner = userDAO.findByEmail("mail@gmail.com");
-		User buddy = userDAO.findByEmail("nonpresident@gmail.com");
-		userService.addRelation(owner, buddy);
+//		User owner = userDAO.findByEmail("mail@gmail.com");
+//		User buddy = userDAO.findByEmail("nonpresident@gmail.com");
+//		userService.addRelation(owner, buddy);
+
+		IPayMyBuddyServices payMyBuddyServices = context.getBean(IPayMyBuddyServices.class);
+		payMyBuddyServices.makeTransaction(new BigDecimal(500.00), "virement test");
+		System.out.println("le virement a bien été effectué");
+
 
 
 	}

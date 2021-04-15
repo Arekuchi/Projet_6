@@ -6,12 +6,13 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 public class CreateUser {
     public static void main(String[] args) {
 
-        double balancedefault = 0.00;
+        BigDecimal balancedefault = new BigDecimal(0.00);
 
         long now = System.currentTimeMillis();
         java.sql.Timestamp dateSQL = new Timestamp(now);

@@ -1,11 +1,11 @@
 package com.openclassroom.paymybuddy.services;
 
+import com.openclassroom.paymybuddy.DAO.ITransferDAO;
 import com.openclassroom.paymybuddy.DAO.IUserDAO;
 import com.openclassroom.paymybuddy.DTO.ExternalTransferDTO;
 import com.openclassroom.paymybuddy.DTO.InternalTransferInfo;
-import com.openclassroom.paymybuddy.DTO.TransferInfo;
 import com.openclassroom.paymybuddy.DTO.UserInfo;
-import com.openclassroom.paymybuddy.model.ExternalTransfer;
+import com.openclassroom.paymybuddy.model.Transfer;
 import com.openclassroom.paymybuddy.model.User;
 import com.openclassroom.paymybuddy.web.exception.DataNotFoundException;
 import com.openclassroom.paymybuddy.web.exception.InvalidArgumentException;
@@ -16,7 +16,6 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -31,15 +30,39 @@ public class PayMyBuddyServices implements IPayMyBuddyServices {
     @Autowired
     ITransferService transferService;
 
+    @Autowired
+    ITransferDAO transferDAO;
+
+    /**
+     * Mehtod to make a Transfer
+     * @param amount
+     * @param description
+     * @return
+     */
+    @Override
+    public Transfer makeTransaction(BigDecimal amount, String description) {
+
+        Transfer transfer = new Transfer();
+        transfer.setAmount(amount);
+        transfer.setDescription(description);
+        transfer.setStatus("IN_PROGRESS");
+        transfer.setTransactionDate(Timestamp.valueOf(LocalDateTime.now()));
+        System.out.println(transfer.getId());
+
+        transferService.addTransaction(transfer);
+
+        return transfer;
+    }
+
     /**
      * Method to make an Internal Transfer
      * Checking if Users exists, then if the sender's balance is enough to make the transfer
      * @param sender
-     * @param reveiver
+     * @param receiver
      * @param amount
      */
     @Override
-    public void makeInternalTransaction(User sender, User reveiver, BigDecimal amount) {
+    public void makeInternalTransaction(User sender, User receiver, BigDecimal amount, String description) {
 
         // init comme add friend + amount > user.getAmount
         User userSender = userDAO.findByEmail(sender.getEmail());
@@ -53,16 +76,23 @@ public class PayMyBuddyServices implements IPayMyBuddyServices {
         if (userReceiver.getEmail() == null) {
             throw new DataNotFoundException("L'utilisateur n'existe pas : " + userReceiver.getFirstName() + userReceiver.getLastName());
         }
-        if (tempAmount < tempBalance) {
+        if (amount.signum() <= 0) {
+            throw new InvalidArgumentException("Le montant ne peut être nul");
+        }
+        if (tempAmount > tempBalance) {
             throw new InvalidArgumentException("Le montant du compte est inférieur au montant du versement");
         }
 
+        // appel à makeTransaction - Il nous faut les champs d'un Transfer
+        Transfer transfer = makeTransaction(amount, description);
+
+
         InternalTransferInfo internalTransferInfo = new InternalTransferInfo();
         internalTransferInfo.setSenderId(sender.getId());
-        internalTransferInfo.setReceiverId(reveiver.getId());
+        internalTransferInfo.setReceiverId(receiver.getId());
 
         // save
-        transferService.addInternalTransaction(internalTransferInfo);
+//        transferService.addInternalTransaction(internalTransferInfo);
     }
 
     /**
@@ -73,7 +103,7 @@ public class PayMyBuddyServices implements IPayMyBuddyServices {
      * @param iban
      */
     @Override
-    public void makeExternalTransaction(User receiver, BigDecimal amount, String iban) {
+    public void makeExternalTransaction(User receiver, BigDecimal amount, String iban, String description) {
 
         User userReceiver = userDAO.findByEmail(receiver.getEmail());
 

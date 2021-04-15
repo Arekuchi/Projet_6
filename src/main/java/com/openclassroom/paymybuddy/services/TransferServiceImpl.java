@@ -3,6 +3,7 @@ package com.openclassroom.paymybuddy.services;
 import com.openclassroom.paymybuddy.DAO.IInternalTransferDAO;
 import com.openclassroom.paymybuddy.DAO.ITransferDAO;
 import com.openclassroom.paymybuddy.DAO.IUserDAO;
+import com.openclassroom.paymybuddy.DTO.ExternalTransferDTO;
 import com.openclassroom.paymybuddy.DTO.InternalTransferInfo;
 import com.openclassroom.paymybuddy.DTO.TransferInfo;
 import com.openclassroom.paymybuddy.model.ExternalTransfer;
@@ -58,6 +59,8 @@ public class TransferServiceImpl implements ITransferService {
         return transferInfo;
     }
 
+
+
     public List<TransferInfo> findByStatus(String status) {
         List<Transfer> transferList = transferDAO.findByStatus(status);
         List<TransferInfo> transferInfoList = new ArrayList<>();
@@ -76,29 +79,44 @@ public class TransferServiceImpl implements ITransferService {
         return transferInfoList;
     }
 
+    // Méthode addTransfer
+
+    @Override
+    public Boolean addTransaction(Transfer transfer) {
+
+
+        transferDAO.save(transfer);
+        return true;
+    }
+
     // Méthode addInternalTransaction
 
-    public Boolean addInternalTransaction(InternalTransferInfo internalTransferInfo) {
+    public Boolean addInternalTransaction(InternalTransfer internalTransfer) {
 
-        InternalTransfer internalTransfer = new InternalTransfer();
-        internalTransfer.setReceiverID(userDAO.getOne(internalTransferInfo.getSenderId()));
-        internalTransfer.setReceiverID(userDAO.getOne(internalTransferInfo.getReceiverId()));
+        InternalTransfer tempInternalTransfer = new InternalTransfer();
+        tempInternalTransfer.setReceiverID(internalTransfer.getReceiverID());
+        tempInternalTransfer.setReceiverID(internalTransfer.getSenderID());
 
-        transferDAO.save(internalTransfer);
+        transferDAO.save(tempInternalTransfer);
         return true;
+    }
+
+    @Override
+    public Boolean addExternalTransaction(ExternalTransferDTO transferDTO) {
+        return null;
     }
     // Méthode addExternalTransaction
 
-    public Boolean addExternalTransaction(ExternalTransfer externalTransfer) {
-
-        ExternalTransfer tempExternalTransfer = new ExternalTransfer();
-        tempExternalTransfer.setAmount(externalTransfer.getAmount());
-        tempExternalTransfer.setTransactionDate(externalTransfer.getTransactionDate());
-        tempExternalTransfer.setDescription(externalTransfer.getDescription());
-        tempExternalTransfer.setFees(externalTransfer.getFees());
-
-
-        transferDAO.save(tempExternalTransfer);
-        return true;
-    }
+//    public Boolean addExternalTransaction(ExternalTransferDTO externalTransferDTP) {
+//
+//        ExternalTransfer tempExternalTransfer = new ExternalTransfer();
+//        tempExternalTransfer.setAmount(externalTransfer.getAmount());
+//        tempExternalTransfer.setTransactionDate(externalTransfer.getTransactionDate());
+//        tempExternalTransfer.setDescription(externalTransfer.getDescription());
+//        tempExternalTransfer.setFees(externalTransfer.getFees());
+//
+//
+//        transferDAO.save(tempExternalTransfer);
+//        return true;
+//    }
 }
