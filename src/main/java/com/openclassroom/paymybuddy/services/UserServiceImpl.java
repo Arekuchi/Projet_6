@@ -75,7 +75,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public Boolean addUser(UserInfoCreate userInfoCreate) {
+    public boolean addUser(UserInfoCreate userInfoCreate) {
 
         // etape 1 : Vérifier que toutes les entrées de l'objet en param est valide (InvalidArgument, DataMissing) / if etc...
         if (userInfoCreate.getEmail().isEmpty()) {
@@ -112,8 +112,9 @@ public class UserServiceImpl implements IUserService {
         return true; // rajout pour éviter une erreur
     }
 
+
     @Override
-    public Boolean addRelation(User owner, User buddy) {
+    public boolean addRelation(User owner, User buddy) {
 
         Relation relation = new Relation();
         relation.setOwner(owner);
@@ -124,10 +125,20 @@ public class UserServiceImpl implements IUserService {
         return true;
     }
 
+    @Override
+    public boolean deleteRelation(User owner, User buddy) {
+
+        // on a besoin de trouver la relation
+        Relation relation = new Relation();
+        relation.setId(relationDAO.findByBuddy(buddy).getId());
+
+        relationDAO.delete(relation);
+
+        return true;
+    }
 
 
-
-    public boolean deleteUserByEmail(String email) throws Exception {
+    public boolean deleteUserByEmail(String email) {
 
         // on vérifie que le param est bien rempli
         if (email.isEmpty() || email.isBlank()) {

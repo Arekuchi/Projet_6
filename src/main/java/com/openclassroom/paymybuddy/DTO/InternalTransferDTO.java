@@ -1,20 +1,22 @@
 package com.openclassroom.paymybuddy.DTO;
 
-import com.openclassroom.paymybuddy.model.User;
+
 
 import java.math.BigDecimal;
 
-public class ExternalTransferDTO {
+public class InternalTransferDTO {
 
     // fields
     private Integer id;
-    private String emailUser;
     private BigDecimal amount;
     private String description;
-    private String ibanUser;
+    private String emailSender;
+    private String emailReceiver;
+
 
 
     // getters & setters
+
 
     public Integer getId() {
         return id;
@@ -22,14 +24,6 @@ public class ExternalTransferDTO {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getEmailUser() {
-        return emailUser;
-    }
-
-    public void setEmailUser(String emailUser) {
-        this.emailUser = emailUser;
     }
 
     public BigDecimal getAmount() {
@@ -48,11 +42,19 @@ public class ExternalTransferDTO {
         this.description = description;
     }
 
-    public String getIbanUser() {
-        return ibanUser;
+    public String getEmailSender() {
+        return emailSender;
     }
 
-    public void setIbanUser(String ibanUser) {
-        this.ibanUser = ibanUser;
+    public void setEmailSender(String emailSender) {
+        this.emailSender = emailSender;
+    }
+
+    public String getEmailReceiver() {
+        return emailReceiver;
+    }
+
+    public void setEmailReceiver(String emailReceiver) {
+        this.emailReceiver = emailReceiver;
     }
 }

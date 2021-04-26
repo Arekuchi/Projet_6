@@ -14,6 +14,8 @@ public interface IUserService {
 
     int countUsers();
 
-    Boolean addUser(UserInfoCreate userInfoCreate);
-    Boolean addRelation(User owner, User buddy);
+    boolean addUser(UserInfoCreate userInfoCreate);
+    boolean deleteUserByEmail(String email);
+    boolean addRelation(User owner, User buddy);
+    boolean deleteRelation(User owner, User buddy);
 }

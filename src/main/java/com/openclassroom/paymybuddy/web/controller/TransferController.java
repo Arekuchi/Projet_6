@@ -1,9 +1,10 @@
 package com.openclassroom.paymybuddy.web.controller;
 
-import com.openclassroom.paymybuddy.DTO.TransferInfo;
-import com.openclassroom.paymybuddy.DTO.UserInfo;
+import com.openclassroom.paymybuddy.DTO.*;
+import com.openclassroom.paymybuddy.model.ExternalTransfer;
 import com.openclassroom.paymybuddy.model.Transfer;
 import com.openclassroom.paymybuddy.model.User;
+import com.openclassroom.paymybuddy.services.ITransferService;
 import com.openclassroom.paymybuddy.services.TransferServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,13 +16,26 @@ import java.util.List;
 public class TransferController {
 
     @Autowired
-    TransferServiceImpl transferService;
+    ITransferService transferService;
 
     // POST - CREATE
 
     @PostMapping("/Transfer")
     public void getTransfer(@RequestBody Transfer transfer) throws Exception {
 
+    }
+
+    @PostMapping("/Transfer/Internal")
+    @ResponseStatus(HttpStatus.CREATED)
+    public InternalTransferDTO doInternalTransfer(@RequestBody InternalTransferDTO internalTransferDTO) {
+        return transferService.doInternalTransfer(internalTransferDTO);
+
+    }
+
+    @PostMapping("/Transfer/External")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ExternalTransferDTO doExternalTransfer(@RequestBody ExternalTransferDTO externalTransferDTO) {
+         return transferService.doExternalTransfer(externalTransferDTO);
     }
 
 

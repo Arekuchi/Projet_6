@@ -61,15 +61,21 @@ public class PaymybuddyApplication {
 //
 //		userDAO.delete(userDAO.findByEmail("banatole@mail.com"));
 
-
+		// méthode pour ajouter une relation - fonctionne OK
 //		User owner = userDAO.findByEmail("mail@gmail.com");
 //		User buddy = userDAO.findByEmail("nonpresident@gmail.com");
 //		userService.addRelation(owner, buddy);
 
-		IPayMyBuddyServices payMyBuddyServices = context.getBean(IPayMyBuddyServices.class);
-		payMyBuddyServices.makeTransaction(new BigDecimal(500.00), "virement test");
-		System.out.println("le virement a bien été effectué");
+		// méthode pour supprimer une relation en utilisant findByBuddy de la DAO - fonctionne OK
+//		User owner = userDAO.findByEmail("mail@gmail.com");
+//		User buddy = userDAO.findByEmail("nonpresident@gmail.com");
+//		userService.deleteRelation(owner, buddy);
 
+		// méthode pour ajouter un transfer - fonctionne OK
+//		IPayMyBuddyServices payMyBuddyServices = context.getBean(IPayMyBuddyServices.class);
+//		payMyBuddyServices.makeTransaction(new BigDecimal(500.00), "virement test");
+//		System.out.println("le virement a bien été effectué");
+//
 
 
 	}

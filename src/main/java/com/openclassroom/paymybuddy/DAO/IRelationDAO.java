@@ -9,5 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface IRelationDAO extends JpaRepository<Relation, Integer> {
 
     Relation findByBuddy(User buddy);
+    Relation findByOwner(User owner);
+    Relation findByOwner_EmailAndBuddy_Email(String senderEmail, String receiverEmail);
 
 }

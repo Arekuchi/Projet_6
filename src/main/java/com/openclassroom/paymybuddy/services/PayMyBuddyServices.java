@@ -112,9 +112,9 @@ public class PayMyBuddyServices implements IPayMyBuddyServices {
         }
 
         ExternalTransferDTO tempExternalTransfer = new ExternalTransferDTO();
-        tempExternalTransfer.setAmount(amount);
-        tempExternalTransfer.setUser(receiver);
-        tempExternalTransfer.setIban(iban);
+//        tempExternalTransfer.setAmount(amount);
+//        tempExternalTransfer.setUser(receiver);
+//        tempExternalTransfer.setIban(iban);
         transferService.addExternalTransaction(tempExternalTransfer);
     }
 

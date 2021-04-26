@@ -1,18 +1,23 @@
 package com.openclassroom.paymybuddy.services;
 
 import com.openclassroom.paymybuddy.DAO.IInternalTransferDAO;
+import com.openclassroom.paymybuddy.DAO.IRelationDAO;
 import com.openclassroom.paymybuddy.DAO.ITransferDAO;
 import com.openclassroom.paymybuddy.DAO.IUserDAO;
 import com.openclassroom.paymybuddy.DTO.ExternalTransferDTO;
-import com.openclassroom.paymybuddy.DTO.InternalTransferInfo;
+import com.openclassroom.paymybuddy.DTO.InternalTransferDTO;
 import com.openclassroom.paymybuddy.DTO.TransferInfo;
-import com.openclassroom.paymybuddy.model.ExternalTransfer;
-import com.openclassroom.paymybuddy.model.InternalTransfer;
-import com.openclassroom.paymybuddy.model.Transfer;
+import com.openclassroom.paymybuddy.model.*;
+import com.openclassroom.paymybuddy.web.exception.DataMissingException;
+import com.openclassroom.paymybuddy.web.exception.DataNotFoundException;
+import com.openclassroom.paymybuddy.web.exception.InvalidArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +34,9 @@ public class TransferServiceImpl implements ITransferService {
 
     @Autowired
     IUserDAO userDAO;
+
+    @Autowired
+    IRelationDAO relationDAO;
 
     @Override
     public List<TransferInfo> findAll() {
@@ -60,7 +68,7 @@ public class TransferServiceImpl implements ITransferService {
     }
 
 
-
+    @Override
     public List<TransferInfo> findByStatus(String status) {
         List<Transfer> transferList = transferDAO.findByStatus(status);
         List<TransferInfo> transferInfoList = new ArrayList<>();
@@ -105,18 +113,94 @@ public class TransferServiceImpl implements ITransferService {
     public Boolean addExternalTransaction(ExternalTransferDTO transferDTO) {
         return null;
     }
-    // Méthode addExternalTransaction
 
-//    public Boolean addExternalTransaction(ExternalTransferDTO externalTransferDTP) {
-//
-//        ExternalTransfer tempExternalTransfer = new ExternalTransfer();
-//        tempExternalTransfer.setAmount(externalTransfer.getAmount());
-//        tempExternalTransfer.setTransactionDate(externalTransfer.getTransactionDate());
-//        tempExternalTransfer.setDescription(externalTransfer.getDescription());
-//        tempExternalTransfer.setFees(externalTransfer.getFees());
-//
-//
-//        transferDAO.save(tempExternalTransfer);
-//        return true;
-//    }
+
+
+    @Override
+    public InternalTransferDTO doInternalTransfer(InternalTransferDTO internalTransferDTO) {
+
+        // vérif que les deux users sont amis
+        Relation relation = relationDAO.findByOwner_EmailAndBuddy_Email(internalTransferDTO.getEmailSender(), internalTransferDTO.getEmailReceiver());
+
+        if(relation == null) {
+            throw new DataNotFoundException("Les utilisateurs ne sont pas amis");
+        }
+        // vérif que le sender a assez pour le transfer
+        if(internalTransferDTO.getAmount().compareTo(relation.getOwner().getBalance()) > 0) {
+           throw new InvalidArgumentException("L'utilisataur n'a pas assez pour l'envoi");
+        }
+
+        InternalTransfer internalTransfer = new InternalTransfer();
+        internalTransfer.setSenderID(relation.getOwner());
+        internalTransfer.setReceiverID(relation.getBuddy());
+        internalTransfer.setStatus("COMPLETED");
+        internalTransfer.setAmount(internalTransferDTO.getAmount());
+        internalTransfer.setTransactionDate(Timestamp.valueOf(LocalDateTime.now()));
+        internalTransfer.setDescription(internalTransferDTO.getDescription());
+
+        transferDAO.save(internalTransfer);
+
+        internalTransferDTO.setId(internalTransfer.getId());
+
+        // on mets à jour les comptes des users
+        relation.getOwner().setBalance(relation.getOwner().getBalance().subtract(internalTransferDTO.getAmount()));
+        relation.getBuddy().setBalance(relation.getBuddy().getBalance().add(internalTransferDTO.getAmount()));
+
+        userDAO.save(relation.getOwner());
+        userDAO.save(relation.getBuddy());
+
+        return internalTransferDTO;
+    }
+
+    @Override
+    public ExternalTransferDTO doExternalTransfer(ExternalTransferDTO externalTransferDTO) {
+
+        //vérif que le User existe (findByEmail) puis if
+        User user = userDAO.findByEmail(externalTransferDTO.getEmailUser());
+        if (user == null) {
+            throw new DataMissingException("L'utilisateur n'existe pas");
+        }
+
+        // on check que l'iban appartient à l'utilisateur (bankaccountlist)
+        System.out.println(user.getBankAccountList().toString());
+        System.out.println(user.getBankAccountList());
+        System.out.println(externalTransferDTO.getIbanUser());
+        System.out.println(user.getBankAccountList().contains(externalTransferDTO.getIbanUser()));
+        if (!user.getBankAccountList().contains(externalTransferDTO.getIbanUser())) {
+            throw new InvalidArgumentException("Le compte n'appartient pas à cet utilisateur");
+        }
+
+        // sommes de transfer positive uniquement
+        if (externalTransferDTO.getAmount().compareTo(BigDecimal.ZERO) < 0) {
+            throw new InvalidArgumentException("La somme du la transaction est négative");
+        }
+
+
+        // faire le métier, crée un externaltransfer, puis le map externaltransferDTO
+        ExternalTransfer externalTransfer = new ExternalTransfer();
+        externalTransfer.setAmount(externalTransferDTO.getAmount());
+        externalTransfer.setFees(externalTransferDTO.getAmount().doubleValue() / 10);
+        externalTransfer.setDescription(externalTransferDTO.getDescription());
+        externalTransfer.setStatus("COMPLETED");
+        externalTransfer.setTransactionDate(Timestamp.valueOf(LocalDateTime.now()));
+
+
+        // save externaltransfer
+        transferDAO.save(externalTransfer);
+
+        externalTransferDTO.setId(externalTransfer.getId());
+
+        // update User (balance)
+
+        user.setBalance(user.getBalance().add(externalTransferDTO.getAmount()));
+
+        //changer le void en externaltransferDTO et rajouter l'id (return)
+
+        return externalTransferDTO;
+
+
+    }
+
+
+
 }
