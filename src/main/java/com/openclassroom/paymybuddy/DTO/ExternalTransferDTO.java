@@ -12,6 +12,7 @@ public class ExternalTransferDTO {
     private BigDecimal amount;
     private String description;
     private String ibanUser;
+    private String bankAccountIban;
 
 
     // getters & setters
@@ -55,4 +56,6 @@ public class ExternalTransferDTO {
     public void setIbanUser(String ibanUser) {
         this.ibanUser = ibanUser;
     }
+
+
 }

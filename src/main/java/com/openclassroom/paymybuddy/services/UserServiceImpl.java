@@ -2,10 +2,13 @@ package com.openclassroom.paymybuddy.services;
 
 
 import com.openclassroom.paymybuddy.DAO.IRelationDAO;
+import com.openclassroom.paymybuddy.DAO.IRoleDAO;
 import com.openclassroom.paymybuddy.DAO.IUserDAO;
 import com.openclassroom.paymybuddy.DTO.UserInfo;
 import com.openclassroom.paymybuddy.DTO.UserInfoCreate;
+import com.openclassroom.paymybuddy.DTO.UserRegistrationDTO;
 import com.openclassroom.paymybuddy.model.Relation;
+import com.openclassroom.paymybuddy.model.Role;
 import com.openclassroom.paymybuddy.model.User;
 
 
@@ -13,6 +16,11 @@ import com.openclassroom.paymybuddy.web.exception.DataAlreadyExistsException;
 import com.openclassroom.paymybuddy.web.exception.DataMissingException;
 import com.openclassroom.paymybuddy.web.exception.InvalidArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -23,7 +31,10 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -36,6 +47,12 @@ public class UserServiceImpl implements IUserService {
 
     @Autowired
     IRelationDAO relationDAO;
+
+    @Autowired
+    IRoleDAO roleDAO;
+
+    static BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+
 
     @Override
     public List<UserInfo> findAll() {
@@ -138,6 +155,8 @@ public class UserServiceImpl implements IUserService {
     }
 
 
+
+
     public boolean deleteUserByEmail(String email) {
 
         // on vérifie que le param est bien rempli
@@ -155,4 +174,43 @@ public class UserServiceImpl implements IUserService {
     }
 
 
+
+
+
+
+
+
+
+    // connection
+
+    @Override
+    public User save(UserRegistrationDTO userRegistrationDTO) {
+
+        Role role = roleDAO.findRoleByName("USER");
+        User user = new User(userRegistrationDTO.getFirstName(), userRegistrationDTO.getLastName(), userRegistrationDTO.getEmail(), encoder.encode(userRegistrationDTO.getPassword()), BigDecimal.ZERO, Timestamp.valueOf(LocalDateTime.now()), Arrays.asList(role));
+
+
+        return userDAO.save(user);
+    }
+
+
+
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+
+        User user = userDAO.findByEmail(email);
+        if (user == null) {
+            throw new UsernameNotFoundException("Invalid Username or Password");
+        }
+
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), mapRolesToAuthorities(user.getRoleCollection()));
+
+    }
+
+    private Collection<?extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
+
+        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+
+    }
 }

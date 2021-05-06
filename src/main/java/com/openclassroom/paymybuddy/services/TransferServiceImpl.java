@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -162,11 +163,17 @@ public class TransferServiceImpl implements ITransferService {
         }
 
         // on check que l'iban appartient à l'utilisateur (bankaccountlist)
-        System.out.println(user.getBankAccountList().toString());
-        System.out.println(user.getBankAccountList());
-        System.out.println(externalTransferDTO.getIbanUser());
-        System.out.println(user.getBankAccountList().contains(externalTransferDTO.getIbanUser()));
-        if (!user.getBankAccountList().contains(externalTransferDTO.getIbanUser())) {
+
+//        List<BankAccount> bankAccountList = user.getBankAccountList();
+//        for (BankAccount bankAccount : bankAccountList) {
+//            if (!Arrays.asList(bankAccountList).contains(externalTransferDTO.getIbanUser())) {
+//                throw new InvalidArgumentException("Le compte n'appartient pas à cet utilisateur");
+//            }
+//        }
+
+        boolean ibanUserIsTrue = user.getBankAccountList().toString().contains(externalTransferDTO.getIbanUser());
+        System.out.println(ibanUserIsTrue);
+        if (!ibanUserIsTrue) {
             throw new InvalidArgumentException("Le compte n'appartient pas à cet utilisateur");
         }
 
@@ -183,6 +190,11 @@ public class TransferServiceImpl implements ITransferService {
         externalTransfer.setDescription(externalTransferDTO.getDescription());
         externalTransfer.setStatus("COMPLETED");
         externalTransfer.setTransactionDate(Timestamp.valueOf(LocalDateTime.now()));
+
+        //on doit remplir la colonne bank_account_iban
+        externalTransfer.setBankAccount(user.getBankAccountList().get(0)); // on va chercher l'iban numéro 1 du User (donc son premier BankAccount)
+
+
 
 
         // save externaltransfer

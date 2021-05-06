@@ -5,6 +5,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -32,8 +33,15 @@ public class User {
     @Column(name="createdate")
     Timestamp createDate;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy="user", cascade=CascadeType.ALL)
+    @OneToMany(mappedBy="user", cascade=CascadeType.ALL)
     private List<BankAccount> bankAccountList;
+
+    @OneToMany(mappedBy = "owner")
+    private List<Relation> relationList;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private Collection<Role> roleCollection;
 
 
     // constructors
@@ -60,6 +68,15 @@ public class User {
         this.createDate = createDate;
     }
 
+    public User(String firstName, String lastName, String email, String password, BigDecimal balance, Timestamp createDate, Collection<Role> roleCollection) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.balance = balance;
+        this.createDate = createDate;
+        this.roleCollection = roleCollection;
+    }
 
 
     // getters & setters
@@ -127,6 +144,21 @@ public class User {
         this.bankAccountList = bankAccountList;
     }
 
+    public List<Relation> getRelationList() {
+        return relationList;
+    }
+
+    public void setRelationList(List<Relation> relationList) {
+        this.relationList = relationList;
+    }
+
+    public Collection<Role> getRoleCollection() {
+        return roleCollection;
+    }
+
+    public void setRoleCollection(Collection<Role> roleCollection) {
+        this.roleCollection = roleCollection;
+    }
 
     // convenience method
 

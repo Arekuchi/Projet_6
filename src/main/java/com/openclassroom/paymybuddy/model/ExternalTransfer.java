@@ -41,8 +41,13 @@ public class ExternalTransfer extends Transfer {
         this.fees = fees;
     }
 
+    public BankAccount getBankAccount() {
+        return bankAccount;
+    }
 
-
+    public void setBankAccount(BankAccount bankAccount) {
+        this.bankAccount = bankAccount;
+    }
 
     @Override
     public String toString() {
