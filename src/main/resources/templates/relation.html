@@ -1,16 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head th:insert="fragments/head">  </head>
+<head th:insert="fragments/head">
+
+        <meta charset="ISO-8859-1">
+        <title>Registration</title>
+        <link rel="stylesheet"
+              href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+              integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+              crossorigin="anonymous">
+
+</head>
 
 <body>
 <nav th:insert="fragments/navbar"> </nav>
 
+<!-- create navigation bar ( header) -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                    aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span> <span
+                    class="icon-bar"></span> <span class="icon-bar"></span> <span
+                    class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#" th:href="@{/}">Registration and
+                Login Module</a>
+        </div>
+    </div>
+</nav>
+
+<br>
+<br>
+<br>
 
 
+<div class="container">
+    <h3>Relation</h3>
+    <div class="shadowbox">
+
+        <p style="width:1100px;height:200px;background-color:lightgray;padding: 70px;text-align:center;border-radius: 2rem;"
+
+        <div class="form-group">
+        <label class="control-label" for="email"> Enter the email here : </label> <input
+            id="email" class="form-control" style="margin:auto;width:30%;" th:field="*{email}" required
+            autofocus="autofocus" />
+
+            <input class="favorite styled" type="button" value="Add connection" style="margin:15px">
+    </div>
+        </p>
 
 
+    </div>
+</div>
 
+<div class="container">
+    <h2 style="text-align:center">My Relation</h2>
+    <div class="list">
+        <table>
+            <caption></caption>
+            <table style="width:100%;border :2px solid black;font-size:18px;">
+                <thead style="background-color:#F0F8FF; border :2px solid black;">
+                <tr>
+                    <th>Nom</th>
+                    <th>Âge</th>
+                    <th>Pays</th>
+                </tr>
+                </thead>
+
+                <tr style="border :1px solid black;">
+                    <td>Carmen</td>
+                    <td>33 ans</td>
+                    <td>Espagne</td>
+                </tr>
+                <tr>
+                    <td>Michelle</td>
+                    <td>26 ans</td>
+                    <td>États-Unis</td>
+                </tr>
+            </table>
+        </table>
+    </div>
+</div>
 
 
 
