@@ -1,19 +1,16 @@
 package com.openclassroom.paymybuddy.services;
 
 
-import com.openclassroom.paymybuddy.DAO.IRelationDAO;
-import com.openclassroom.paymybuddy.DAO.IRoleDAO;
-import com.openclassroom.paymybuddy.DAO.IUserDAO;
+import com.openclassroom.paymybuddy.DAO.*;
 import com.openclassroom.paymybuddy.DTO.UserInfo;
 import com.openclassroom.paymybuddy.DTO.UserInfoCreate;
 import com.openclassroom.paymybuddy.DTO.UserRegistrationDTO;
-import com.openclassroom.paymybuddy.model.Relation;
-import com.openclassroom.paymybuddy.model.Role;
-import com.openclassroom.paymybuddy.model.User;
+import com.openclassroom.paymybuddy.model.*;
 
 
 import com.openclassroom.paymybuddy.web.exception.DataAlreadyExistsException;
 import com.openclassroom.paymybuddy.web.exception.DataMissingException;
+import com.openclassroom.paymybuddy.web.exception.DataNotFoundException;
 import com.openclassroom.paymybuddy.web.exception.InvalidArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -50,6 +47,12 @@ public class UserServiceImpl implements IUserService {
 
     @Autowired
     IRoleDAO roleDAO;
+
+    @Autowired
+    IBankAccountDAO bankAccountDAO;
+
+    @Autowired
+    IExternalTransferDAO externalTransferDAO;
 
     static BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
@@ -131,18 +134,6 @@ public class UserServiceImpl implements IUserService {
 
 
     @Override
-    public boolean addRelation(User owner, User buddy) {
-
-        Relation relation = new Relation();
-        relation.setOwner(owner);
-        relation.setBuddy(buddy);
-
-        relationDAO.save(relation);
-
-        return true;
-    }
-
-    @Override
     public boolean deleteRelation(User owner, User buddy) {
 
         // on a besoin de trouver la relation
@@ -173,15 +164,74 @@ public class UserServiceImpl implements IUserService {
         return true;
     }
 
+    @Override
+    public Relation addRelation(String emailOwner, String emailBuddy) {
 
+        Relation relation = new Relation();
+        relation.setOwner(userDAO.findByEmail(emailOwner));
+        relation.setBuddy(userDAO.findByEmail(emailBuddy));
 
+        if (relation.getBuddy() == null) {
+            throw new DataNotFoundException("Cette personne n'existe pas");
+        }
+        for (Relation existingRelation : relation.getOwner().getRelationList()) {
+            if (existingRelation.getBuddy().equals(relation.getBuddy())) {
+                throw new DataAlreadyExistsException("Les utilisateurs sont déjà amis");
+            }
+        }
+        relationDAO.save(relation);
 
+        return relation;
+    }
 
 
 
 
 
     // connection
+
+    @Override
+    public List<Relation> relationListEmail(String emailOwner) {
+
+        return relationDAO.findAllByOwner_Email(emailOwner);
+    }
+
+    @Override
+    public List<BankAccount> bankAccountListEmail(String emailOwner) {
+
+        return bankAccountDAO.findBankAccountsByUser_Email(emailOwner);
+    }
+
+    @Override
+    public List<ExternalTransfer> externalTransferListByIban(String iban) {
+
+
+
+        return externalTransferDAO.findAllByBankAccountIban(iban);
+    }
+
+//    @Override
+//    public List<ExternalTransfer> externalTransferListByEmail(String email) {
+//
+//        List<BankAccount> bankAccountList = bankAccountListEmail(email);
+//        List<ExternalTransfer> externalTransferList = new ArrayList<>();
+//
+//
+//
+//        return externalTransferDAO.findAllByUserEmail(bankAccountList);
+//    }
+
+    @Override
+    public boolean deleteRelationById(Integer id) {
+
+        if (relationDAO.existsById(id)) {
+            relationDAO.deleteById(id);
+            return true;
+        }
+
+        return false;
+    }
+
 
     @Override
     public User save(UserRegistrationDTO userRegistrationDTO) {
@@ -192,8 +242,6 @@ public class UserServiceImpl implements IUserService {
 
         return userDAO.save(user);
     }
-
-
 
 
     @Override

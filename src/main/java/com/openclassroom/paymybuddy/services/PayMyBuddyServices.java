@@ -147,7 +147,7 @@ public class PayMyBuddyServices implements IPayMyBuddyServices {
         userDAO.findByEmail(tempUserBuddy.getEmail());
 
 
-        userService.addRelation(tempUserOwner, tempUserBuddy);
+//        userService.addRelation(tempUserOwner, tempUserBuddy);
 
     }
 

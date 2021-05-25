@@ -4,6 +4,9 @@ package com.openclassroom.paymybuddy.services;
 import com.openclassroom.paymybuddy.DTO.UserInfo;
 import com.openclassroom.paymybuddy.DTO.UserInfoCreate;
 import com.openclassroom.paymybuddy.DTO.UserRegistrationDTO;
+import com.openclassroom.paymybuddy.model.BankAccount;
+import com.openclassroom.paymybuddy.model.ExternalTransfer;
+import com.openclassroom.paymybuddy.model.Relation;
 import com.openclassroom.paymybuddy.model.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -18,10 +21,20 @@ public interface IUserService extends UserDetailsService {
 
     boolean addUser(UserInfoCreate userInfoCreate);
     boolean deleteUserByEmail(String email);
-    boolean addRelation(User owner, User buddy);
+
+    Relation addRelation(String emailOwner, String emailBuddy);
     boolean deleteRelation(User owner, User buddy);
 
 
+    List<Relation> relationListEmail(String emailOwner);
+    List<BankAccount> bankAccountListEmail(String emailOwner);
+    List<ExternalTransfer> externalTransferListByIban(String iban);
+//    List<ExternalTransfer> externalTransferListByEmail(String email);
+
+
+    boolean deleteRelationById(Integer id);
+
     User save(UserRegistrationDTO userRegistrationDTO);
+
 
 }

@@ -1,11 +1,8 @@
 package com.openclassroom.paymybuddy.web.controller;
 
 import com.openclassroom.paymybuddy.DTO.*;
-import com.openclassroom.paymybuddy.model.ExternalTransfer;
 import com.openclassroom.paymybuddy.model.Transfer;
-import com.openclassroom.paymybuddy.model.User;
 import com.openclassroom.paymybuddy.services.ITransferService;
-import com.openclassroom.paymybuddy.services.TransferServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

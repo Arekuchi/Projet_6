@@ -10,8 +10,14 @@ import java.util.List;
 public interface IBankAccountDAO extends JpaRepository<BankAccount, String> {
 
 
-    BankAccount findByIban(String iban);
+
+
+
+    BankAccount findBankAccountByIban(String iban);
     List<BankAccount> findByBankName(String bankName);
     BankAccount findByUserEmail(String email);
 
+    BankAccount deleteByIban(String iban);
+
+    List<BankAccount> findBankAccountsByUser_Email(String email);
 }

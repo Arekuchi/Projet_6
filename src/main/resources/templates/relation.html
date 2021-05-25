@@ -15,22 +15,7 @@
 <body>
 <nav th:insert="fragments/navbar"> </nav>
 
-<!-- create navigation bar ( header) -->
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed"
-                    data-toggle="collapse" data-target="#navbar" aria-expanded="false"
-                    aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span> <span
-                    class="icon-bar"></span> <span class="icon-bar"></span> <span
-                    class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#" th:href="@{/}">Registration and
-                Login Module</a>
-        </div>
-    </div>
-</nav>
+
 
 <br>
 <br>
@@ -38,49 +23,55 @@
 
 
 <div class="container">
-    <h3>Relation</h3>
-    <div class="shadowbox">
 
-        <p style="width:1100px;height:200px;background-color:lightgray;padding: 70px;text-align:center;border-radius: 2rem;"
+    <form th:action="@{/user/relation/addBuddy}" method="post">
+        <h3>Relation</h3>
+        <div class="shadowbox">
 
-        <div class="form-group">
-        <label class="control-label" for="email"> Enter the email here : </label> <input
-            id="email" class="form-control" style="margin:auto;width:30%;" th:field="*{email}" required
-            autofocus="autofocus" />
+            <div class="form-group" style="width:1100px;height:200px;background-color:lightgray;padding: 70px;text-align:center;border-radius: 2rem;">
+                <label class="control-label" for="email"> Enter the email here : </label>
 
-            <input class="favorite styled" type="button" value="Add connection" style="margin:15px">
-    </div>
-        </p>
+                <input
+                    id="email" class="form-control" style="margin:auto;width:30%;" th:name="emailBuddy" required
+                    autofocus="autofocus" />
 
+                <button type="submit" class="btn btn-success" style="margin:15px;">Add Connection</button>
 
-    </div>
+            </div>
+
+        </div>
+    </form>
+    <span th:each="error:${errors}" th:text="${error}"></span>
+
 </div>
 
 <div class="container">
     <h2 style="text-align:center">My Relation</h2>
     <div class="list">
-        <table>
-            <caption></caption>
-            <table style="width:100%;border :2px solid black;font-size:18px;">
-                <thead style="background-color:#F0F8FF; border :2px solid black;">
-                <tr>
-                    <th>Nom</th>
-                    <th>Âge</th>
-                    <th>Pays</th>
-                </tr>
-                </thead>
+        <table style="width:100%;border :2px solid black;font-size:18px;">
+            <thead style="background-color:#F0F8FF; border :2px solid black;">
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th></th>
+            </tr>
+            </thead>
 
-                <tr style="border :1px solid black;">
-                    <td>Carmen</td>
-                    <td>33 ans</td>
-                    <td>Espagne</td>
-                </tr>
-                <tr>
-                    <td>Michelle</td>
-                    <td>26 ans</td>
-                    <td>États-Unis</td>
-                </tr>
-            </table>
+            <tbody style="border :1px solid black;">
+            <tr th:each="relation:${relations}">
+                <td th:text="${relation.buddy.firstName}"></td>
+                <td th:text="${relation.buddy.lastName}"></td>
+                <td th:text="${relation.buddy.email}"></td>
+                <td>
+                <form th:method="post" th:action="@{/user/relation/deleteRelation}">
+                    <input type="hidden" th:value="${relation.id}" th:name="id">
+                </form>
+                </td>
+            </tr>
+
+            </tbody>
+
         </table>
     </div>
 </div>

@@ -1,6 +1,7 @@
 package com.openclassroom.paymybuddy.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name="bank_account")
@@ -23,6 +24,10 @@ public class BankAccount {
     @ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name="user_id")
     private User user;
+
+    @OneToMany(mappedBy = "bankAccount")
+    private List<ExternalTransfer> externalTransfers;
+
 
 
     // constructors
@@ -95,6 +100,14 @@ public class BankAccount {
     }
 
     public String userEmail() {return user.getEmail();}
+
+    public List<ExternalTransfer> getExternalTransfers() {
+        return externalTransfers;
+    }
+
+    public void setExternalTransfers(List<ExternalTransfer> externalTransfers) {
+        this.externalTransfers = externalTransfers;
+    }
 
     // convinience
     @Override

@@ -1,10 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<head th:insert="fragments/head">
+
+    <meta charset="ISO-8859-1">
+    <title>Registration</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+
 </head>
 <body>
+<nav th:insert="fragments/navbar"> </nav>
+
+
+<div class="container">
+
+    <form  th:action="@{/user/extransfer/addBankAccount}" method="post" th:object="${bankAccount}">
+        <h3>Add Bank Account</h3>
+        <div class="shadowbox">
+
+            <div class="form-group" style="width:1100px;height:300px;background-color:lightgray;padding: 70px;text-align:center;border-radius: 2rem;">
+
+
+                <input
+                        id="iban" placeholder="IBAN" class="form-control" style="margin:auto;width:30%;" required
+                        autofocus="autofocus" type="text" th:field="*{iban}" />
+                <input id="bic" placeholder="BIC" class="form-control" style="margin:auto;width:30%;"  type="text" th:field="*{bic}"/>
+                <input id="bankName" placeholder="Bank Name" class="form-control" style="margin:auto;width:30%;" type="text" th:field="*{bankName}"/>
+                <input id="accountName" placeholder="Account Name" class="form-control" style="margin:auto;width:30%;" type="text" th:field="*{accountName}"/>
+
+                <button type="submit" class="btn btn-success" style="margin:15px;">Add Bank Account</button>
+
+            </div>
+
+        </div>
+    </form>
+    <span th:each="error:${errors}" th:text="${error}"></span>
+
+</div>
+
+
+<div class="container">
+    <h2 style="text-align:center">My Bank Accounts</h2>
+    <div class="list">
+        <table style="width:100%;border :2px solid black;font-size:18px;">
+            <thead style="background-color:#F0F8FF; border :2px solid black;">
+            <tr>
+                <th>IBAN</th>
+                <th>BIC</th>
+                <th>BANK NAME</th>
+                <th>ACCOUNT NAME</th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody style="border :1px solid black;">
+            <tr th:each="bankAccount:${bankAccountList}">
+                <td th:text="${bankAccount.iban}"></td>
+                <td th:text="${bankAccount.bic}"></td>
+                <td th:text="${bankAccount.bankName}"></td>
+                <td th:text="${bankAccount.accountName}"></td>
+                <td>
+                    <form th:method="post" th:action="@{/user/externalTransfer/deleteBankAccount}" th:if="${#lists.isEmpty(bankAccount.externalTransfers)}">
+                        <input type="hidden" th:value="${bankAccount.iban}" th:name="iban">
+                        <button type="submit"><i class="fa fa-trash" aria-hidden="true"></i></button>
+
+                    </form>
+                </td>
+            </tr>
+
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+
+
+<!--<div class="container">-->
+
+<!--    <form th:action="@{/user/externaltransfer/addBankAccount}" method="post">-->
+<!--        <h3>Add External Transfer</h3>-->
+<!--        <div class="shadowbox">-->
+
+<!--            <div class="form-group" style="width:1100px;height:300px;background-color:lightgray;padding: 70px;text-align:center;border-radius: 2rem;">-->
+<!--                <label class="control-label" for="bankAcccount"> Select the bank account : </label>-->
+
+<!--                <button onclick="myFunction()" class="dropbtn"> Account list</button>-->
+<!--&lt;!&ndash;                <div id="myDropdown" class="dropdown-content">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <a href="bankAccountList"></a>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+
+<!--                <input id="amount" placeholder="amount" class="form-control" style="margin:auto;width:30%;" th:name="bankNameUser"/>-->
+
+<!--                <input id="accountName" placeholder="Account Name" class="form-control" style="margin:auto;width:30%;" th:name="accountNameUser"/>-->
+
+<!--                <button type="submit" class="btn btn-success" style="margin:15px;">Add Bank Account</button>-->
+
+<!--            </div>-->
+
+<!--        </div>-->
+<!--    </form>-->
+<!--    <span th:each="error:${errors}" th:text="${error}"></span>-->
+
+<!--</div>-->
+
+
+
+
+
+
+<div class="container">
+    <h2 style="text-align:center">My Transfers</h2>
+    <div class="list">
+        <table style="width:100%;border :2px solid black;font-size:18px;">
+            <thead style="background-color:#F0F8FF; border :2px solid black;">
+            <tr>
+                <th>Transfer ID</th>
+                <th>IBAN</th>
+                <th>Fees</th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody style="border :1px solid black;">
+            <tr th:each="externalTransfers:${externalTransferList}">
+                <td th:text="${externalTransfers.id}"></td>
+                <td th:text="${externalTransfers.iban}"></td>
+                <td th:text="${externalTransfers.fees}"></td>
+                <td>
+<!--                    <form th:method="post" th:action="@{/user/externalTransfer/deleteBankAccount}">-->
+<!--                        <input type="hidden" th:value="${bankAccount.iban}" th:name="iban">-->
+<!--                        <button><i class="fa fa-trash" aria-hidden="true"></i></button>-->
+<!--                    </form>-->
+                </td>
+            </tr>
+
+            </tbody>
+
+        </table>
+    </div>
+</div>
 
 </body>
 </html>

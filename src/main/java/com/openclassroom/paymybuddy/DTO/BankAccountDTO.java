@@ -1,0 +1,57 @@
+package com.openclassroom.paymybuddy.DTO;
+
+public class BankAccountDTO {
+
+    //fields
+
+    private String iban;
+    private String bic;
+    private String bankName;
+    private String accountName;
+
+    // constructors
+
+    public BankAccountDTO() {
+    }
+
+    public BankAccountDTO(String iban, String bic, String bankName, String accountName) {
+        this.iban = iban;
+        this.bic = bic;
+        this.bankName = bankName;
+        this.accountName = accountName;
+    }
+
+    // getters & setters
+
+    public String getIban() {
+        return iban;
+    }
+
+    public void setIban(String iban) {
+        this.iban = iban;
+    }
+
+    public String getBic() {
+        return bic;
+    }
+
+    public void setBic(String bic) {
+        this.bic = bic;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
+}
