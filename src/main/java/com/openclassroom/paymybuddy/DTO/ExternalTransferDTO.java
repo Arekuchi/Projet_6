@@ -8,11 +8,11 @@ public class ExternalTransferDTO {
 
     // fields
     private Integer id;
-    private String emailUser;
-    private BigDecimal amount;
-    private String description;
     private String ibanUser;
-    private String bankAccountIban;
+    private BigDecimal amount;
+    private String emailUser;
+    private String description;
+    private BigDecimal fees;
 
 
     // getters & setters
@@ -25,12 +25,12 @@ public class ExternalTransferDTO {
         this.id = id;
     }
 
-    public String getEmailUser() {
-        return emailUser;
+    public String getIbanUser() {
+        return ibanUser;
     }
 
-    public void setEmailUser(String emailUser) {
-        this.emailUser = emailUser;
+    public void setIbanUser(String ibanUser) {
+        this.ibanUser = ibanUser;
     }
 
     public BigDecimal getAmount() {
@@ -41,6 +41,14 @@ public class ExternalTransferDTO {
         this.amount = amount;
     }
 
+    public String getEmailUser() {
+        return emailUser;
+    }
+
+    public void setEmailUser(String emailUser) {
+        this.emailUser = emailUser;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -49,13 +57,24 @@ public class ExternalTransferDTO {
         this.description = description;
     }
 
-    public String getIbanUser() {
-        return ibanUser;
+    public BigDecimal getFees() {
+        return fees;
     }
 
-    public void setIbanUser(String ibanUser) {
+    public void setFees(BigDecimal fees) {
+        this.fees = fees;
+    }
+
+    // constructors
+
+
+    public ExternalTransferDTO() {
+    }
+
+    public ExternalTransferDTO(Integer id, String ibanUser, BigDecimal amount, String emailUser) {
+        this.id = id;
         this.ibanUser = ibanUser;
+        this.amount = amount;
+        this.emailUser = emailUser;
     }
-
-
 }

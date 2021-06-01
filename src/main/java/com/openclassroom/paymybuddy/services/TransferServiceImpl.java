@@ -1,14 +1,10 @@
 package com.openclassroom.paymybuddy.services;
 
-import com.openclassroom.paymybuddy.DAO.IInternalTransferDAO;
-import com.openclassroom.paymybuddy.DAO.IRelationDAO;
-import com.openclassroom.paymybuddy.DAO.ITransferDAO;
-import com.openclassroom.paymybuddy.DAO.IUserDAO;
+import com.openclassroom.paymybuddy.DAO.*;
 import com.openclassroom.paymybuddy.DTO.ExternalTransferDTO;
 import com.openclassroom.paymybuddy.DTO.InternalTransferDTO;
 import com.openclassroom.paymybuddy.DTO.TransferInfo;
 import com.openclassroom.paymybuddy.model.*;
-import com.openclassroom.paymybuddy.web.exception.DataMissingException;
 import com.openclassroom.paymybuddy.web.exception.DataNotFoundException;
 import com.openclassroom.paymybuddy.web.exception.InvalidArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +15,6 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -38,6 +33,12 @@ public class TransferServiceImpl implements ITransferService {
 
     @Autowired
     IRelationDAO relationDAO;
+
+    @Autowired
+    IBankAccountDAO bankAccountDAO;
+
+    @Autowired
+    IExternalTransferDAO externalTransferDAO;
 
     @Override
     public List<TransferInfo> findAll() {
@@ -66,6 +67,43 @@ public class TransferServiceImpl implements ITransferService {
         transferInfo.setId(transfer.getId());
 
         return transferInfo;
+    }
+
+    @Override
+    public List<InternalTransferDTO> findInternalTransferByUser(String emailOwner) {
+
+        List<InternalTransferDTO> internalTransferDTOList = new ArrayList<>();
+
+        for (InternalTransfer internalTransfer : internalTransferDAO.findAllBySenderID_EmailOrderByTransactionDateDesc(emailOwner)) {
+
+            InternalTransferDTO internalTransferDTO = new InternalTransferDTO();
+            internalTransferDTO.setEmailSender(internalTransfer.getSenderID().getEmail());
+            internalTransferDTO.setEmailReceiver(internalTransfer.getReceiverID().getEmail());
+            internalTransferDTO.setAmount(internalTransfer.getAmount());
+            internalTransferDTO.setId(internalTransfer.getId());
+            internalTransferDTO.setDescription(internalTransfer.getDescription());
+
+            internalTransferDTOList.add(internalTransferDTO);
+
+        }
+
+        return internalTransferDTOList;
+    }
+
+    @Override
+    public List<ExternalTransferDTO> findExternalTransferByUser(String emailOwner) {
+
+        List<ExternalTransferDTO> externalTransferDTOList = new ArrayList<>();
+        for (ExternalTransfer externalTransfer : externalTransferDAO.findAllByBankAccount_User_EmailOrderByTransactionDateDesc(emailOwner)) {
+            ExternalTransferDTO dto = new ExternalTransferDTO();
+            dto.setIbanUser(externalTransfer.getBankAccount().getIban());
+            dto.setDescription(externalTransfer.getDescription());
+            dto.setAmount(externalTransfer.getAmount());
+            dto.setFees(externalTransfer.getFees());
+            externalTransferDTOList.add(dto);
+        }
+        return externalTransferDTOList;
+
     }
 
 
@@ -156,57 +194,28 @@ public class TransferServiceImpl implements ITransferService {
     @Override
     public ExternalTransferDTO doExternalTransfer(ExternalTransferDTO externalTransferDTO) {
 
-        //vérif que le User existe (findByEmail) puis if
-        User user = userDAO.findByEmail(externalTransferDTO.getEmailUser());
-        if (user == null) {
-            throw new DataMissingException("L'utilisateur n'existe pas");
-        }
 
-        // on check que l'iban appartient à l'utilisateur (bankaccountlist)
+        // récupérer le bank account en fontion de l'iban et de l'email du user
+        BankAccount bankAccount = bankAccountDAO.findBankAccountByIbanAndUser_Email(externalTransferDTO.getIbanUser(), externalTransferDTO.getEmailUser());
+        User user = bankAccount.getUser();
+        // On attribut le dernier iban ajouté.
+        // Fees
+        BigDecimal fee = externalTransferDTO.getAmount().multiply(BigDecimal.valueOf(0.005));
 
-//        List<BankAccount> bankAccountList = user.getBankAccountList();
-//        for (BankAccount bankAccount : bankAccountList) {
-//            if (!Arrays.asList(bankAccountList).contains(externalTransferDTO.getIbanUser())) {
-//                throw new InvalidArgumentException("Le compte n'appartient pas à cet utilisateur");
-//            }
-//        }
-
-        boolean ibanUserIsTrue = user.getBankAccountList().toString().contains(externalTransferDTO.getIbanUser());
-        System.out.println(ibanUserIsTrue);
-        if (!ibanUserIsTrue) {
-            throw new InvalidArgumentException("Le compte n'appartient pas à cet utilisateur");
-        }
-
-        // sommes de transfer positive uniquement
-        if (externalTransferDTO.getAmount().compareTo(BigDecimal.ZERO) < 0) {
-            throw new InvalidArgumentException("La somme du la transaction est négative");
-        }
-
-
-        // faire le métier, crée un externaltransfer, puis le map externaltransferDTO
         ExternalTransfer externalTransfer = new ExternalTransfer();
         externalTransfer.setAmount(externalTransferDTO.getAmount());
-        externalTransfer.setFees(externalTransferDTO.getAmount().doubleValue() / 10);
         externalTransfer.setDescription(externalTransferDTO.getDescription());
-        externalTransfer.setStatus("COMPLETED");
         externalTransfer.setTransactionDate(Timestamp.valueOf(LocalDateTime.now()));
+        externalTransfer.setStatus("COMPLETED");
+        externalTransfer.setFees(fee);
+        externalTransfer.setBankAccount(bankAccount);
 
-        //on doit remplir la colonne bank_account_iban
-        externalTransfer.setBankAccount(user.getBankAccountList().get(0)); // on va chercher l'iban numéro 1 du User (donc son premier BankAccount)
-
-
-
-
-        // save externaltransfer
         transferDAO.save(externalTransfer);
 
         externalTransferDTO.setId(externalTransfer.getId());
+        user.setBalance(user.getBalance().add(externalTransfer.getAmount().subtract(fee)));
 
-        // update User (balance)
-
-        user.setBalance(user.getBalance().add(externalTransferDTO.getAmount()));
-
-        //changer le void en externaltransferDTO et rajouter l'id (return)
+        userDAO.save(user);
 
         return externalTransferDTO;
 

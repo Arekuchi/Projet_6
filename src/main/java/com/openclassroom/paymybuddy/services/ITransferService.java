@@ -12,6 +12,13 @@ public interface ITransferService {
 
     List<TransferInfo> findAll();
     TransferInfo findById(Integer id);
+    List<InternalTransferDTO> findInternalTransferByUser(String emailOwner);
+    List<ExternalTransferDTO> findExternalTransferByUser(String emailOwner);
+    InternalTransferDTO doInternalTransfer(InternalTransferDTO internalTransferDTO);
+    ExternalTransferDTO doExternalTransfer(ExternalTransferDTO externalTransferDTO);
+
+
+
 
     List<TransferInfo> findByStatus(String status);
 
@@ -19,7 +26,6 @@ public interface ITransferService {
 //    Boolean addInternalTransaction(InternalTransfer transfer);
     Boolean addExternalTransaction(ExternalTransferDTO transferDTO);
 
-    InternalTransferDTO doInternalTransfer(InternalTransferDTO internalTransferDTO);
 
-    ExternalTransferDTO doExternalTransfer(ExternalTransferDTO externalTransferDTO);
+
 }

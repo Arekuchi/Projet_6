@@ -13,7 +13,7 @@ public class ExternalTransfer extends Transfer {
     // fields
 
     @Column(name="fees")
-    private double fees;
+    private BigDecimal fees;
 
 
     @ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
@@ -33,11 +33,11 @@ public class ExternalTransfer extends Transfer {
 // getters & setters
 
 
-    public double getFees() {
+    public BigDecimal getFees() {
         return fees;
     }
 
-    public void setFees(double fees) {
+    public void setFees(BigDecimal fees) {
         this.fees = fees;
     }
 

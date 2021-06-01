@@ -18,7 +18,7 @@
             <ul class="nav navbar-nav">
                 <li sec:authorize="isAuthenticated()"><a th:href="@{/user/relation}">Relation</a></li>
                 <li sec:authorize="isAuthenticated()"><a th:href="@{/user/extransfer}">External Transfer</a></li>
-                <li sec:authorize="isAuthenticated()"><a th:href="@{/user/transfer}">Internal Transfer</a></li>
+                <li sec:authorize="isAuthenticated()"><a th:href="@{/user/intransfer}">Internal Transfer</a></li>
                 <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Logout</a></li>
             </ul>
         </div>

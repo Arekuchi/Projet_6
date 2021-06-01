@@ -13,6 +13,9 @@ public interface IExternalTransferDAO extends JpaRepository<ExternalTransfer, In
 
     List<ExternalTransfer> findAllByBankAccountIban(String iban);
 
+    List<ExternalTransfer> findAllByBankAccount_User_EmailOrderByTransactionDateDesc(String emailOwner);
+
+
 
 //    List<ExternalTransfer> findAllByUserEmail(List<BankAccount> bankAccountList);
 

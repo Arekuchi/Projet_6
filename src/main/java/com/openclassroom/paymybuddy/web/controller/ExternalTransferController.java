@@ -36,14 +36,13 @@ public class ExternalTransferController {
     @GetMapping("/extransfer")
     public String externalTransferPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
 
-        List<BankAccount> accounts = bankAccountService.findBankAccountByUser(userDetails.getUsername());
-
-
-
-        model.addAttribute("bankAccountList", userService.bankAccountListEmail(userDetails.getUsername()));
-        model.addAttribute("bankAccount", new BankAccountDTO());
-
         ExternalTransferDTO externalTransferDTO = new ExternalTransferDTO();
+        model.addAttribute("externalTransfer", externalTransferDTO);
+        model.addAttribute("bankAccount", new BankAccountDTO());
+        model.addAttribute("externalTransfers", transferService.findExternalTransferByUser(userDetails.getUsername()));
+
+        List<BankAccount> accounts = bankAccountService.findBankAccountByUser(userDetails.getUsername());
+        model.addAttribute("listBankAccount", accounts);
 
         if (!accounts.isEmpty()) {
             externalTransferDTO.setIbanUser(accounts.get(accounts.size()-1).getIban());
@@ -71,6 +70,19 @@ public class ExternalTransferController {
     public String deleteBankAccount(@RequestParam String iban) {
 
         bankAccountService.deleteBankAccountByIban(iban);
+
+        return "redirect:/user/extransfer";
+    }
+
+
+    @PostMapping("/extransfer/addExternalTransfer")
+    public String doExternalTransfer(@ModelAttribute ExternalTransferDTO externalTransferDTO, @AuthenticationPrincipal UserDetails userDetails) {
+
+        externalTransferDTO.setEmailUser(userDetails.getUsername());
+
+        transferService.doExternalTransfer(externalTransferDTO);
+
+
 
         return "redirect:/user/extransfer";
     }
