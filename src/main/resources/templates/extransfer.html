@@ -22,7 +22,6 @@
 
             <div class="form-group" style="width:1100px;height:300px;background-color:lightgray;padding: 70px;text-align:center;border-radius: 2rem;">
 
-
                 <input
                         id="iban" placeholder="IBAN" class="form-control" style="margin:auto;width:30%;" required
                         autofocus="autofocus" type="text" th:field="*{iban}" />
@@ -56,13 +55,13 @@
             </thead>
 
             <tbody style="border :1px solid black;">
-            <tr th:each="bankAccount:${bankAccountList}">
+            <tr th:each="bankAccount:${listBankAccount}">
                 <td th:text="${bankAccount.iban}"></td>
                 <td th:text="${bankAccount.bic}"></td>
                 <td th:text="${bankAccount.bankName}"></td>
                 <td th:text="${bankAccount.accountName}"></td>
                 <td>
-                    <form th:method="post" th:action="@{/user/externalTransfer/deleteBankAccount}" th:if="${#lists.isEmpty(bankAccount.externalTransfers)}">
+                    <form th:method="post" th:action="@{/user/extransfer/deleteBankAccount}" th:if="${#lists.isEmpty(bankAccount.externalTransfers)}">
                         <input type="hidden" th:value="${bankAccount.iban}" th:name="iban">
                         <button type="submit"><i class="fa fa-trash" aria-hidden="true"></i></button>
 
@@ -80,7 +79,7 @@
 
 <div class="container">
 
-    <form th:action="@{/user/externaltransfer/addExternalTransfer}" method="post" th:object="${externalTransfer}">
+    <form th:action="@{/user/extransfer/addExternalTransfer}" method="post" th:object="${externalTransfer}">
         <h3>Add External Transfer</h3>
         <div class="shadowbox">
 
@@ -100,8 +99,6 @@
                     <span class="input-group-addon">$</span>
                 </div>
                 <input class="pay" type="submit" value="Pay"/>
-
-
             </div>
     </form>
     <span th:each="error:${errors}" th:text="${error}"></span>
