@@ -14,7 +14,6 @@ public class ExternalTransferDTO {
     private String description;
     private BigDecimal fees;
 
-
     // getters & setters
 
     public Integer getId() {
@@ -66,7 +65,6 @@ public class ExternalTransferDTO {
     }
 
     // constructors
-
 
     public ExternalTransferDTO() {
     }

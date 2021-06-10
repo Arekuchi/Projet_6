@@ -29,7 +29,6 @@ public class BankAccount {
     private List<ExternalTransfer> externalTransfers;
 
 
-
     // constructors
 
     public BankAccount() {

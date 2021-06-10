@@ -1,17 +1,10 @@
 package com.openclassroom.paymybuddy;
 
 
-import com.openclassroom.paymybuddy.DAO.*;
-import com.openclassroom.paymybuddy.DTO.UserInfoCreate;
-import com.openclassroom.paymybuddy.model.User;
-import com.openclassroom.paymybuddy.services.*;
-import com.openclassroom.paymybuddy.web.controller.UserController;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 
 @SpringBootApplication

@@ -1,7 +1,6 @@
 package com.openclassroom.paymybuddy.DTO;
 
 
-
 import java.math.BigDecimal;
 
 public class InternalTransferDTO {
@@ -13,10 +12,7 @@ public class InternalTransferDTO {
     private String emailSender;
     private String emailReceiver;
 
-
-
     // getters & setters
-
 
     public Integer getId() {
         return id;

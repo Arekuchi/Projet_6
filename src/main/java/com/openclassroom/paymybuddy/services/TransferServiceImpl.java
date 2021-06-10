@@ -3,7 +3,6 @@ package com.openclassroom.paymybuddy.services;
 import com.openclassroom.paymybuddy.DAO.*;
 import com.openclassroom.paymybuddy.DTO.ExternalTransferDTO;
 import com.openclassroom.paymybuddy.DTO.InternalTransferDTO;
-import com.openclassroom.paymybuddy.DTO.TransferInfo;
 import com.openclassroom.paymybuddy.model.*;
 import com.openclassroom.paymybuddy.web.exception.DataNotFoundException;
 import com.openclassroom.paymybuddy.web.exception.InvalidArgumentException;
@@ -40,34 +39,6 @@ public class TransferServiceImpl implements ITransferService {
     @Autowired
     IExternalTransferDAO externalTransferDAO;
 
-    @Override
-    public List<TransferInfo> findAll() {
-        List<Transfer> transferList = transferDAO.findAll();
-        List<TransferInfo> transferInfoList = new ArrayList<>();
-
-        for (Transfer transfer : transferList) {
-            TransferInfo transferInfo = new TransferInfo();
-            transferInfo.setId(transfer.getId());
-            transferInfo.setFees(transfer.getAmount());
-            transferInfo.setDescription(transfer.getDescription());
-            transferInfo.setTransactionDate(transfer.getTransactionDate());
-
-            transferInfoList.add(transferInfo);
-        }
-
-        return transferInfoList;
-    }
-
-    public TransferInfo findById(Integer id) {
-        Transfer transfer = transferDAO.getOne(id);
-        TransferInfo transferInfo = new TransferInfo();
-        transferInfo.setTransactionDate(transfer.getTransactionDate());
-        transferInfo.setDescription(transfer.getDescription());
-        transferInfo.setFees(transfer.getAmount());
-        transferInfo.setId(transfer.getId());
-
-        return transferInfo;
-    }
 
     @Override
     public List<InternalTransferDTO> findInternalTransferByUser(String emailOwner) {
@@ -107,51 +78,11 @@ public class TransferServiceImpl implements ITransferService {
     }
 
 
-    @Override
-    public List<TransferInfo> findByStatus(String status) {
-        List<Transfer> transferList = transferDAO.findByStatus(status);
-        List<TransferInfo> transferInfoList = new ArrayList<>();
-
-        for (Transfer transfer : transferList) {
-            TransferInfo transferInfo = new TransferInfo();
-            transferInfo.setId(transfer.getId());
-            transferInfo.setDescription(transfer.getDescription());
-            transferInfo.setFees(transfer.getAmount());
-            transferInfo.setTransactionDate(transfer.getTransactionDate());
-
-            transferInfoList.add(transferInfo);
-
-        }
-
-        return transferInfoList;
-    }
-
     // Méthode addTransfer
 
-    @Override
-    public Boolean addTransaction(Transfer transfer) {
 
-
-        transferDAO.save(transfer);
-        return true;
-    }
 
     // Méthode addInternalTransaction
-
-    public Boolean addInternalTransaction(InternalTransfer internalTransfer) {
-
-        InternalTransfer tempInternalTransfer = new InternalTransfer();
-        tempInternalTransfer.setReceiverID(internalTransfer.getReceiverID());
-        tempInternalTransfer.setReceiverID(internalTransfer.getSenderID());
-
-        transferDAO.save(tempInternalTransfer);
-        return true;
-    }
-
-    @Override
-    public Boolean addExternalTransaction(ExternalTransferDTO transferDTO) {
-        return null;
-    }
 
 
 

@@ -1,7 +1,6 @@
 package com.openclassroom.paymybuddy.web.controller;
 
 import com.openclassroom.paymybuddy.DTO.BankAccountDTO;
-import com.openclassroom.paymybuddy.DTO.BankAccountInfo;
 import com.openclassroom.paymybuddy.DTO.ExternalTransferDTO;
 import com.openclassroom.paymybuddy.model.BankAccount;
 import com.openclassroom.paymybuddy.services.IBankAccountService;
@@ -9,7 +8,6 @@ import com.openclassroom.paymybuddy.services.ITransferService;
 import com.openclassroom.paymybuddy.services.IUserService;
 import com.openclassroom.paymybuddy.web.exception.DataAlreadyExistsException;
 import com.openclassroom.paymybuddy.web.exception.DataMissingException;
-import com.openclassroom.paymybuddy.web.exception.DataNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
