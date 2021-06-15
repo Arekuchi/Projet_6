@@ -9,8 +9,10 @@ import com.openclassroom.paymybuddy.web.exception.DataAlreadyExistsException;
 import com.openclassroom.paymybuddy.web.exception.DataMissingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.transaction.Transactional;
+import java.sql.SQLException;
 import java.util.List;
 
 @Service
@@ -25,7 +27,7 @@ public class BankAccountServiceImpl implements IBankAccountService {
 
 
     @Override
-    public BankAccount addBankAccount(String emailOwner, BankAccountDTO bankAccountDTO) {
+    public BankAccount addBankAccount(String emailOwner, BankAccountDTO bankAccountDTO) throws SQLException {
 
 
         if (bankAccountDTO.getIban().isBlank()) {
@@ -46,9 +48,16 @@ public class BankAccountServiceImpl implements IBankAccountService {
             bankAccount.setAccountName(bankAccountDTO.getAccountName());
             bankAccount.setBankName(bankAccountDTO.getBankName());
 
-            bankAccountDAO.save(bankAccount);
 
+            try {
+                bankAccountDAO.save(bankAccount);
+            } catch (Exception e) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                throw new SQLException("inside addBankAccount bankAccountDAO.save error");
+
+            }
             return bankAccount;
+
         } else if (bankAccount.getUser().equals(user)) {
             throw new DataAlreadyExistsException("Vous possédez déjà un compte pour cet IBAN");
         } else {

@@ -48,6 +48,14 @@ public class BankAccount {
         this.accountName = accountName;
     }
 
+    public BankAccount(String iban, String bic, String bankName, String accountName, User user, List<ExternalTransfer> externalTransfers) {
+        this.iban = iban;
+        this.bic = bic;
+        this.bankName = bankName;
+        this.accountName = accountName;
+        this.user = user;
+        this.externalTransfers = externalTransfers;
+    }
 
     // getters & setters
 

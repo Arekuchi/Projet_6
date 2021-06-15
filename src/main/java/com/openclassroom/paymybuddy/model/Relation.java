@@ -31,6 +31,11 @@ public class Relation {
         this.id = id;
     }
 
+    public Relation(User owner, User buddy) {
+        this.owner = owner;
+        this.buddy = buddy;
+    }
+
 // getters & setters
 
     public Integer getId() {

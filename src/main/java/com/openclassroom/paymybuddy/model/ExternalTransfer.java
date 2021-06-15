@@ -30,7 +30,13 @@ public class ExternalTransfer extends Transfer {
         super(amount, description, transactionDate, status);
     }
 
-// getters & setters
+    public ExternalTransfer(Integer id, BigDecimal amount, String description, Timestamp transactionDate, String status, BigDecimal fees, BankAccount bankAccount) {
+        super(id, amount, description, transactionDate, status);
+        this.fees = fees;
+        this.bankAccount = bankAccount;
+    }
+
+    // getters & setters
 
 
     public BigDecimal getFees() {

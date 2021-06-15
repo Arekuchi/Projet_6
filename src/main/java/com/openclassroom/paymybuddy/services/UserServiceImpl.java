@@ -15,11 +15,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 
 import javax.transaction.Transactional;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -46,7 +48,7 @@ public class UserServiceImpl implements IUserService {
 
 
     @Override
-    public Relation addRelation(String emailOwner, String emailBuddy) {
+    public Relation addRelation(String emailOwner, String emailBuddy) throws SQLException {
 
         Relation relation = new Relation();
         relation.setOwner(userDAO.findByEmail(emailOwner));
@@ -57,15 +59,21 @@ public class UserServiceImpl implements IUserService {
         }
         for (Relation existingRelation : relation.getOwner().getRelationList()) {
             if (existingRelation.getBuddy().equals(relation.getBuddy())) {
-                throw new DataAlreadyExistsException("Les utilisateurs sont déjà amis");
+                throw new DataAlreadyExistsException("Ces personne sont déjà amis");
             }
         }
-        relationDAO.save(relation);
+
+        try {
+            relationDAO.save(relation);
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            throw new SQLException("inside addRelation save error");
+
+        }
+
 
         return relation;
     }
-
-
 
 
 
@@ -91,13 +99,18 @@ public class UserServiceImpl implements IUserService {
 
 
     @Override
-    public User save(UserRegistrationDTO userRegistrationDTO) {
+    public User save(UserRegistrationDTO userRegistrationDTO) throws SQLException {
 
         Role role = roleDAO.findRoleByName("USER");
         User user = new User(userRegistrationDTO.getFirstName(), userRegistrationDTO.getLastName(), userRegistrationDTO.getEmail(), encoder.encode(userRegistrationDTO.getPassword()), BigDecimal.ZERO, Timestamp.valueOf(LocalDateTime.now()), Arrays.asList(role));
 
+        try {
+             return userDAO.save(user);
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            throw new SQLException("inside User save error");
 
-        return userDAO.save(user);
+        }
     }
 
 
@@ -118,4 +131,5 @@ public class UserServiceImpl implements IUserService {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
 
     }
+
 }

@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @Controller
@@ -57,7 +58,7 @@ public class ExternalTransferController {
         try {
             bankAccountService.addBankAccount(userDetails.getUsername(), bankAccountDTO);
 
-        } catch (DataAlreadyExistsException | DataMissingException e) {
+        } catch (DataAlreadyExistsException | DataMissingException | SQLException e) {
             redirectAttributes.addFlashAttribute("errors", List.of(e.getMessage()));
         }
 
@@ -74,7 +75,7 @@ public class ExternalTransferController {
 
 
     @PostMapping("/extransfer/addExternalTransfer")
-    public String doExternalTransfer(@ModelAttribute ExternalTransferDTO externalTransferDTO, @AuthenticationPrincipal UserDetails userDetails) {
+    public String doExternalTransfer(@ModelAttribute ExternalTransferDTO externalTransferDTO, @AuthenticationPrincipal UserDetails userDetails) throws SQLException {
 
         externalTransferDTO.setEmailUser(userDetails.getUsername());
 

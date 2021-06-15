@@ -8,12 +8,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.sql.SQLException;
+
 @Controller
 @RequestMapping("/registration")
 public class UserRegistrationController {
-
-    // field
-
 
     private IUserService userService;
 
@@ -34,7 +33,7 @@ public class UserRegistrationController {
     }
 
     @PostMapping
-    public String registerUserAccount(@ModelAttribute("user")UserRegistrationDTO userRegistrationDTO) {
+    public String registerUserAccount(@ModelAttribute("user")UserRegistrationDTO userRegistrationDTO) throws SQLException {
 
         userService.save(userRegistrationDTO);
 

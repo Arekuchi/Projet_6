@@ -8,9 +8,11 @@ import com.openclassroom.paymybuddy.web.exception.DataNotFoundException;
 import com.openclassroom.paymybuddy.web.exception.InvalidArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -77,17 +79,8 @@ public class TransferServiceImpl implements ITransferService {
 
     }
 
-
-    // Méthode addTransfer
-
-
-
-    // Méthode addInternalTransaction
-
-
-
     @Override
-    public InternalTransferDTO doInternalTransfer(InternalTransferDTO internalTransferDTO) {
+    public InternalTransferDTO doInternalTransfer(InternalTransferDTO internalTransferDTO) throws SQLException {
 
         // vérif que les deux users sont amis
         Relation relation = relationDAO.findByOwner_EmailAndBuddy_Email(internalTransferDTO.getEmailSender(), internalTransferDTO.getEmailReceiver());
@@ -108,7 +101,13 @@ public class TransferServiceImpl implements ITransferService {
         internalTransfer.setTransactionDate(Timestamp.valueOf(LocalDateTime.now()));
         internalTransfer.setDescription(internalTransferDTO.getDescription());
 
-        transferDAO.save(internalTransfer);
+        try {
+            transferDAO.save(internalTransfer);
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            throw new SQLException("inside doInternalTransfer TransferDAO.save error");
+
+        }
 
         internalTransferDTO.setId(internalTransfer.getId());
 
@@ -116,15 +115,20 @@ public class TransferServiceImpl implements ITransferService {
         relation.getOwner().setBalance(relation.getOwner().getBalance().subtract(internalTransferDTO.getAmount()));
         relation.getBuddy().setBalance(relation.getBuddy().getBalance().add(internalTransferDTO.getAmount()));
 
-        userDAO.save(relation.getOwner());
-        userDAO.save(relation.getBuddy());
+        try {
+            userDAO.save(relation.getOwner());
+            userDAO.save(relation.getBuddy());
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            throw new SQLException("inside doInternalTransfer userDAO.save error");
+
+        }
 
         return internalTransferDTO;
     }
 
     @Override
-    public ExternalTransferDTO doExternalTransfer(ExternalTransferDTO externalTransferDTO) {
-
+    public ExternalTransferDTO doExternalTransfer(ExternalTransferDTO externalTransferDTO) throws SQLException {
 
         // récupérer le bank account en fontion de l'iban et de l'email du user
         BankAccount bankAccount = bankAccountDAO.findBankAccountByIbanAndUser_Email(externalTransferDTO.getIbanUser(), externalTransferDTO.getEmailUser());
@@ -141,18 +145,25 @@ public class TransferServiceImpl implements ITransferService {
         externalTransfer.setFees(fee);
         externalTransfer.setBankAccount(bankAccount);
 
-        transferDAO.save(externalTransfer);
+        try {
+            transferDAO.save(externalTransfer);
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            throw new SQLException("inside doExternalTransfer TransferDAO.save error");
+
+        }
 
         externalTransferDTO.setId(externalTransfer.getId());
         user.setBalance(user.getBalance().add(externalTransfer.getAmount().subtract(fee)));
 
-        userDAO.save(user);
+        try {
+            userDAO.save(user);
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            throw new SQLException("inside doExternalTransfer TransferDAO.save error");
+
+        }
 
         return externalTransferDTO;
-
-
     }
-
-
-
 }

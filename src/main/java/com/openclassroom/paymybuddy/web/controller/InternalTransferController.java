@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @Controller
@@ -35,9 +36,7 @@ public class InternalTransferController {
         model.addAttribute("relations", userService.relationListEmail(userDetails.getUsername()));
         model.addAttribute("transfers", transferService.findInternalTransferByUser(userDetails.getUsername()));
 
-
         return "intransfer";
-
     }
 
 
@@ -50,7 +49,7 @@ public class InternalTransferController {
 
             transferService.doInternalTransfer(internalTransferDTO);
 
-        } catch (DataNotFoundException | InvalidArgumentException e) {
+        } catch (DataNotFoundException | InvalidArgumentException | SQLException e) {
             redirectAttributes.addFlashAttribute("errors", List.of(e.getMessage()));
         }
         return "redirect:/user/intransfer";

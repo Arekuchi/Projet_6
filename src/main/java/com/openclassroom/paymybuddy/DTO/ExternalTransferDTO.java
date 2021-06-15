@@ -67,6 +67,7 @@ public class ExternalTransferDTO {
     // constructors
 
     public ExternalTransferDTO() {
+        super();
     }
 
     public ExternalTransferDTO(Integer id, String ibanUser, BigDecimal amount, String emailUser) {
