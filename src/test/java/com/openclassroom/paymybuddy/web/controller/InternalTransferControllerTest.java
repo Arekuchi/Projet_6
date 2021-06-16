@@ -70,7 +70,6 @@ class InternalTransferControllerTest {
         // THEN
         Assertions.assertThat(result).isEqualTo("intransfer");
 
-
     }
 
     @Test

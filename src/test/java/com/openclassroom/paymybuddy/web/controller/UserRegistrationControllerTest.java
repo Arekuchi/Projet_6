@@ -44,18 +44,6 @@ class UserRegistrationControllerTest {
 
     }
 
-    @Test
-    void userRegistrationDTO() throws SQLException {
-
-        // GIVEN
-
-        // WHEN
-
-        // THEN
-
-
-
-    }
 
     @Test
     void registerUserAccount() throws SQLException {
