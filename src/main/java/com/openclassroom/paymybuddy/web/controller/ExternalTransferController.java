@@ -82,7 +82,6 @@ public class ExternalTransferController {
         transferService.doExternalTransfer(externalTransferDTO);
 
 
-
         return "redirect:/user/extransfer";
     }
 }

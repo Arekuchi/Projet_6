@@ -80,8 +80,11 @@ class RelationControllerTest {
         // GIVEN
 
         // WHEN
+        when(userService.deleteRelationById(1)).thenReturn(true);
+        String result = relationController.deleteRelation(1);
 
         // THEN
+        Assertions.assertThat(result).isEqualTo("redirect:/user/relation");
 
     }
 }

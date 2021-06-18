@@ -13,7 +13,6 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -56,11 +55,16 @@ class ExternalTransferControllerTest {
     @Mock
     ExternalTransferDTO externalTransferDTO;
 
+    @Mock
+    IBankAccountDAO bankAccountDAO;
+
 
     User owner = new User(1, "Barack", "Obama", "usa@mail.com", "dudu", BigDecimal.ZERO, Timestamp.valueOf(LocalDateTime.now()));
     User buddy = new User(2, "George", "Bush", "mail@mail.com", "dudu", BigDecimal.ZERO, Timestamp.valueOf(LocalDateTime.now()));
 
-    BankAccountDTO bankAccount = new BankAccountDTO("iban_obama", "bic_ obama", "CIC", "Compte courant");
+    BankAccountDTO bankAccountDTO = new BankAccountDTO("iban_obama", "bic_ obama", "CIC", "Compte courant");
+
+    BankAccount bankAccount = new BankAccount("iban_obama", "bic_ obama", "CIC", "Compte courant", owner, Arrays.asList(new ExternalTransfer()));
 
     Relation relation = new Relation(owner, buddy);
 
@@ -86,8 +90,8 @@ class ExternalTransferControllerTest {
         // GIVEN
 
         // WHEN
-        when(bankAccountService.addBankAccount("email1", bankAccount)).thenReturn(new BankAccount());
-        String result = externalTransferController.addBankAccount(bankAccount, userDetails, redirectAttributes);
+        when(bankAccountService.addBankAccount("email1", bankAccountDTO)).thenReturn(new BankAccount());
+        String result = externalTransferController.addBankAccount(bankAccountDTO, userDetails, redirectAttributes);
 
         // THEN
         Assertions.assertThat(result).isEqualTo("redirect:/user/extransfer");
@@ -95,16 +99,4 @@ class ExternalTransferControllerTest {
     }
 
 
-    @Test
-    void doExternalTransfer() throws SQLException {
-
-//        // GIVEN
-//
-//        // WHEN
-//        when(transferService.doExternalTransfer(externalTransferDTO)).thenReturn(new ExternalTransferDTO());
-//        String result = externalTransferController.doExternalTransfer(externalTransferDTO, userDetails);
-//
-//        // THEN
-//        Assertions.assertThat(result).isEqualTo("redirect:/user/extransfer");
-    }
 }

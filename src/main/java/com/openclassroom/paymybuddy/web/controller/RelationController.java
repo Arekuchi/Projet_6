@@ -47,7 +47,7 @@ public class RelationController {
         return "redirect:/user/relation";
     }
 
-    @PostMapping("/relation/deleteBuddy")
+    @PostMapping("/relation/deleteRelation")
     public String deleteRelation(@RequestParam Integer id) {
 
         userService.deleteRelationById(id);
