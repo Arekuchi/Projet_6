@@ -1,5 +1,6 @@
 package com.openclassroom.paymybuddy.web.controller;
 
+import com.openclassroom.paymybuddy.DAO.IUserDAO;
 import com.openclassroom.paymybuddy.DTO.InternalTransferDTO;
 import com.openclassroom.paymybuddy.services.ITransferService;
 import com.openclassroom.paymybuddy.services.IUserService;
@@ -29,12 +30,16 @@ public class InternalTransferController {
     @Autowired
     private IUserService userService;
 
+    @Autowired
+    IUserDAO userDAO;
+
     @GetMapping("/intransfer")
     public String transferPage (Model model, @AuthenticationPrincipal UserDetails userDetails) {
 
         model.addAttribute("internalTransfer", new InternalTransferDTO());
         model.addAttribute("relations", userService.relationListEmail(userDetails.getUsername()));
         model.addAttribute("transfers", transferService.findInternalTransferByUser(userDetails.getUsername()));
+        model.addAttribute("user", userDAO.findByEmail(userDetails.getUsername()));
 
         return "intransfer";
     }
@@ -55,6 +60,8 @@ public class InternalTransferController {
         return "redirect:/user/intransfer";
 
     }
+
+
 
 
 }
